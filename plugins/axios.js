@@ -9,24 +9,27 @@ export default function ({ $axios }, inject) {
     timeout: 5000,
   })
 
+  // request 를 처리하는 interceptors
   api.interceptors.request.use(
     (request) => {
-      console.log('request:', request)
+      console.log('plugins/axios.js/onRequest:\n', request)
       return request
     },
     (error) => {
-      console.log('request error:', error)
+      console.error('plugins/axios.js/onRequestError:\n', error)
       return Promise.reject(error)
     }
   )
 
+  // response 를 처리하는 interceptors
   api.interceptors.response.use(
     (response) => {
-      console.log('response:', response)
+      console.log('plugins/axios.js/onResponse:\n', response)
+      // 실제 데이터는 response.response.data.data 에 들어있음
       return new Promise((resolve) => resolve(response.data))
     },
     (error) => {
-      console.log(error)
+      console.error('plugins/axios.js/onResponseError:\n', error)
       return Promise.reject(error)
     }
   )

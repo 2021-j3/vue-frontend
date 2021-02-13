@@ -57,9 +57,9 @@ export default {
       return this.$store.getters['product/getProduct']
     },
   },
-  mounted() {
+  created() {
     // 최초 실행됨
-    this.$store.dispatch('product/loadInformation', this.$route.params.id)
+    this.$store.dispatch('product/loadProduct', this.$route.params.id)
   },
 }
 </script>

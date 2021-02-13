@@ -12,3 +12,5 @@ More information about the usage of this directory in [the documentation](https:
 이 디렉토리에는 애플리케이션 레이아웃이 포함되어 있습니다.
 
 이 디렉토리 사용에 대한 자세한 내용은 [문서] (https://nuxtjs.org/guide/views#layouts)를 참조하세요.
+
+default는 가장 바깥에 있는 vue입니다

@@ -22,15 +22,20 @@
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 export default {
+  name: 'VueNavigation',
   components: {
     Logo,
     VuetifyLogo,
   },
   methods: {
     callApi() {
-      console.log(this.$axios)
+      console.log('pages/index.vue/methods/callApi\n', 'test api')
       this.$api.get('accounts/1').then((response) => {
-        console.log(response)
+        console.log(
+          'pages/index.vue/methods/callApi\n',
+          'test api result',
+          response
+        )
       })
     },
   },

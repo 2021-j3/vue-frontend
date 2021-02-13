@@ -25,24 +25,38 @@ export const state = () => ({
 })
 
 export const mutations = {
-  setInformation(state, information) {
-    console.log('information', information)
+  setProduct(state, information) {
+    console.log('store/product.js/mutations/setProductList:\n', information)
     state.products.push(information)
   },
 }
 
 export const actions = {
-  loadInformation(context, id) {
-    console.log('id is', id)
+  loadProduct(context, id) {
+    console.log('store/product.js/actions/loadProduct:\nid is', id)
     this.$api
       .get('/products/' + id)
       .then((data) => data.data)
       .then((data) => {
-        console.log('data', data)
-        context.commit('setInformation', data)
+        console.log('store/product.js/actions/loadProduct:\n', data)
+        context.commit('setProduct', data)
       })
       .catch((error) => {
-        console.log('custom error handler for product page', error)
+        console.error('store/product.js/actions/loadProduct:\n', error)
+      })
+  },
+  loadProductList(context, queries) {
+    console.log('store/product.js/actions/loadProduct:\n', 'query is', queries)
+    const id = 1
+    this.$api
+      .get('/products/' + id)
+      .then((data) => data.data)
+      .then((data) => {
+        console.log('store/product.js/actions/loadProduct:\n', data)
+        context.commit('setProduct', data)
+      })
+      .catch((error) => {
+        console.error('store/product.js/actions/loadProduct:\n', error)
       })
   },
 }
@@ -52,6 +66,10 @@ export const getters = {
   // getStatus(state) { return '{status: ' + state.status + '}' }
   getProduct(state) {
     if (state.products.length > 0) return state.products[0]
+    else return state.dummyProduct
+  },
+  getProductList(state) {
+    if (state.products.length > 0) return state.products
     else return state.dummyProduct
   },
 }
