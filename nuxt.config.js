@@ -23,7 +23,9 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    '~/plugins/axios'
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -49,7 +51,8 @@ export default {
   // Proxy module configuration: https://github.com/nuxt-community/proxy-module#readme
   proxy: {
     '/api': {
-      target: 'http://localhost:20000',
+      target: 'http://localhost:9999',
+      logLevel: 'debug'
     },
   },
 

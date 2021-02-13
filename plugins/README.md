@@ -11,4 +11,6 @@ More information about the usage of this directory in [the documentation](https:
 
 이 디렉토리에는 루트 Vue.js 애플리케이션을 마운트하기 전에 실행할 Javascript 플러그인이 포함되어 있습니다.
 
-이 디렉토리 사용에 대한 자세한 내용은 [문서] (https://nuxtjs.org/guide/plugins)를 참조하세요.
+이 디렉토리 사용에 대한 자세한 내용은 [문서](https://nuxtjs.org/guide/plugins) 를 참조하세요.
+
+axios 플러그인에 대한 자세한 설명은 [설명](https://axios.nuxtjs.org/) 을 참조

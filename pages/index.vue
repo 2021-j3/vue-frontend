@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import api from '@/plugins/axios'
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 export default {
@@ -29,7 +28,8 @@ export default {
   },
   methods: {
     callApi() {
-      api.get('accounts/1').then((response) => {
+      console.log(this.$axios)
+      this.$api.get('accounts/1').then((response) => {
         console.log(response)
       })
     },

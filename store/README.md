@@ -17,4 +17,7 @@ Vuex Store 옵션은 Nuxt.js 프레임 워크에서 구현됩니다.
 
 이 디렉토리에 파일을 생성하면 프레임 워크의 옵션이 자동으로 활성화됩니다.
 
-이 디렉터리 사용에 대한 자세한 내용은 [문서] (https://nuxtjs.org/guide/vuex-store)를 참조하세요.
+이 디렉터리 사용에 대한 자세한 내용은 [문서](https://nuxtjs.org/guide/vuex-store) 를 참조하세요.
+
+vuex에 대해서는 다음을 참조하세요
+[vuex 사용법](https://vuex.vuejs.org/kr/guide/modules.html)
