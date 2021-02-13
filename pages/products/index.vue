@@ -1,8 +1,18 @@
 <template>
   <div class="products">
-    <v-layout row wrap>
-      <v-flex v-for="p in products" md6> </v-flex>
-      <ProductCard :product="p"></ProductCard>
+    <v-layout row>
+      <v-flex d-flex>
+        <ProductCard
+          v-for="(item, index) in products"
+          :key="index"
+          :title="item.title"
+          :content="item.content"
+          :slug="item.slug"
+          :thumbnail-path="item.thumbnailPath"
+          class="pa-2"
+          col="6"
+        ></ProductCard>
+      </v-flex>
     </v-layout>
     <!--    <product-card></product-card>-->
   </div>
