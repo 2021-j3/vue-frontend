@@ -1,4 +1,4 @@
-export default function ({ $axios }, inject) {
+export default function ({ $axios, redirect }, inject) {
   const api = $axios.create({
     baseURL: '/api',
     headers: {
@@ -30,6 +30,7 @@ export default function ({ $axios }, inject) {
     },
     (error) => {
       console.error('plugins/axios.js/onResponseError:\n', error)
+      redirect('/errors/' + error.response.status)
       return Promise.reject(error)
     }
   )
