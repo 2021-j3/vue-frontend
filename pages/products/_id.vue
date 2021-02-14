@@ -16,9 +16,7 @@
     <p>
       <span>썸네일{{ product.thumbnailPath }}</span>
     </p>
-    <p>
-      <span>이미지{{ product.imagePath }}</span>
-    </p>
+    <p></p>
     <p>
       <span>콘텐츠{{ product.content }}</span>
     </p>
@@ -46,12 +44,18 @@
         tag.title
       }}</span>
     </p>
+    <v-row>
+      <v-col cols="6">
+        <img :src="product.imagePath" alt="product description" />
+      </v-col>
+      <v-col cols="6"> </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Id',
+  name: 'ProductsId',
   computed: {
     product(state) {
       return this.$store.getters['product/getProduct']

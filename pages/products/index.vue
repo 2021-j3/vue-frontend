@@ -14,13 +14,12 @@
         ></ProductCard>
       </v-flex>
     </v-layout>
-    <!--    <product-card></product-card>-->
   </div>
 </template>
 <script>
 import ProductCard from '@/components/ProductCard'
 export default {
-  name: 'Product',
+  name: 'Products',
   component: {
     ProductCard,
   },
