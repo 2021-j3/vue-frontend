@@ -12,7 +12,7 @@ export const mutations = {
   // setStatus(state, param){ state.status = param.meaningfulAccessor }
   // store/index.js는 root 모듈로 rootState 를 통해 접근할 수 있다
   // setRootStatus(state, param, rootState) { rootState.status = ... }
-  // .vue 에서 mutation을 호출할 때는 this.$store.commit('뮤테이션이름', 인자)
+  // .vue 에서 mutation을 호출할 때는 this.$store.commit('뮤테이션이름', 인자
 }
 
 export const actions = {
@@ -24,7 +24,7 @@ export const actions = {
   // .vue 에서 action을 호출할 때는 this.$store.dispatch('액션이름', 인자)
 }
 
-export const getters = {
+export const getters = () => ({
   // 계산된 속성을 반환하는 메소드
   // getStatus(state) { return '{status: ' + state.status + '}' }
-}
+})

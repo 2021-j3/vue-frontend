@@ -7,6 +7,9 @@
         <div>
           {{ contentValue }}
         </div>
+        <div>
+          {{ priceValue }}
+        </div>
       </v-card-text>
     </v-card>
   </div>
@@ -20,6 +23,7 @@ export default {
     thumbnailPath: { type: String, default: '' },
     title: { type: String, default: '' },
     content: { type: String, default: '' },
+    price: { type: Number, default: 0 },
   },
   data() {
     return {
@@ -27,6 +31,7 @@ export default {
       thumbnailPathValue: 'https://placeimg.com/150/150/any',
       titleValue: 'title',
       contentValue: 'content',
+      priceValue: 0,
     }
   },
   created() {
@@ -35,6 +40,7 @@ export default {
     this.$data.thumbnailPatValueh = this.thumbnailPath
     this.$data.titleValue = this.title
     this.$data.contentValue = this.content
+    this.$data.priceValue = this.price + '원'
   },
 }
 </script>

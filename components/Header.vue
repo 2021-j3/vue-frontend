@@ -1,40 +1,67 @@
 <template>
   <div class="search_bar">
-    <v-card height="200px">
-      <v-row
-        ><v-col cols="8" offset="2">
-          <v-layout justify-center>
+    <v-card height="120" color="green">
+      <!--타이틀, 검색, 아이콘 버튼-->
+      <v-row>
+        <v-col cols="2" offset="2">
+          <!--타이틀-->
+          <v-layout justify-start>
             <h1>j3</h1>
-            <v-spacer />
-            <v-card class="justify-content" flat height="100px">
-              <v-toolbar floating>
-                <v-text-field
-                  hide-details
-                  append-icon="mdi-magnify"
-                  single-line
-                ></v-text-field>
-              </v-toolbar>
-            </v-card>
-            <v-spacer />
+          </v-layout>
+        </v-col>
+        <v-col cols="4">
+          <!--검색창-->
+          <v-card flat class="justify-content pa-2 pt-0 pb-2">
+            <v-text-field
+              v-model="queryString"
+              hide-details
+              append-icon="mdi-magnify"
+              single-line
+              full-width
+              dense
+              class="pt-0 mt-0"
+              @click:append="searchByQueryString"
+              @keydown.enter="searchByQueryString"
+            ></v-text-field>
+          </v-card>
+        </v-col>
+        <v-col cols="2">
+          <!--회원정보 버튼-->
+          <v-layout align-end>
             <v-btn text>회원정보</v-btn>
             <v-btn text>카드</v-btn>
           </v-layout>
         </v-col>
       </v-row>
-      <v-row
-        ><v-col cols="8" offset="2">
-          <v-menu tile>
+      <!--툴바-->
+      <v-row>
+        <v-col cols="8" offset="2">
+          <!--툴바 / 카테고리 메뉴-->
+          <v-menu v-model="categoriesMenu">
+            <!--툴바 / 카테고리 메뉴 / 메뉴버튼-->
             <template #activator="{ on, attrs }">
-              <v-btn text dark icon v-bind="attrs" v-on="on">
+              <v-btn
+                text
+                dark
+                icon
+                v-bind="attrs"
+                min-width="100"
+                v-on="on"
+                @mouseover="categoriesMenu = true"
+              >
                 <v-icon>mdi-menu</v-icon>
                 전체 카테고리
               </v-btn>
             </template>
+            <!--툴바 / 카테고리 메뉴 / 팝업-->
             <v-card
               color="blue"
               flex
               class="mx-auto"
-              @mouseleave="drawer = false"
+              @mouseleave="
+                drawer = false
+                categoriesMenu = false
+              "
             >
               <v-layout align-start>
                 <v-list color="blue" style="z-index: 3 !important">
@@ -77,6 +104,7 @@
               </v-layout>
             </v-card>
           </v-menu>
+          <!--기타 메뉴-->
           <v-btn text href="/categories/new" tile>신상품</v-btn>
           <v-btn text href="/categories/best" tile>베스트</v-btn>
         </v-col>
@@ -91,13 +119,31 @@ export default {
   data() {
     return {
       drawer: false,
+      // categories: [],
       selectedCategory: null,
-      showCategories: false,
+      categoriesMenu: false,
     }
   },
   computed: {
+    queryString: {
+      get() {
+        return this.$store.getters['products/getQuery']
+      },
+      set(query) {
+        this.$store.dispatch('products/setCondition', { query })
+      },
+    },
+
     categories() {
-      return this.$store.getters['categories/getCategoryList']
+      return this.$store.getters['categories/getCategoryTree']
+    },
+  },
+  created() {
+    this.$store.dispatch('categories/loadCategories')
+  },
+  methods: {
+    searchByQueryString() {
+      this.$store.dispatch('products/findProducts')
     },
   },
 }

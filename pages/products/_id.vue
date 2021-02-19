@@ -40,7 +40,7 @@
       >
     </p>
     <p>
-      태그<span v-for="tag in product.tags" :key="tag.tag_id">{{
+      태그<span v-for="(tag, index) in product.tags" :key="index">{{
         tag.title
       }}</span>
     </p>
@@ -57,13 +57,13 @@
 export default {
   name: 'ProductsId',
   computed: {
-    product(state) {
+    product() {
       return this.$store.getters['product/getProduct']
     },
   },
   created() {
     // 최초 실행됨
-    this.$store.dispatch('product/loadProduct', this.$route.params.id)
+    this.$store.dispatch('product/fetchProduct', this.$route.params.id)
   },
 }
 </script>

@@ -6,7 +6,6 @@ export default function ({ $axios, redirect }, inject) {
         Accept: 'application/json',
       },
     },
-    timeout: 5000,
   })
 
   // request 를 처리하는 interceptors
