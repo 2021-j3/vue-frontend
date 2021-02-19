@@ -75,7 +75,7 @@ export default {
       return this.$route.params.code
     },
     categories() {
-      return this.$store.getters['categories/getCategoryList']
+      return this.$store.getters['categories/getCategoryTree']
     },
   },
   watch: {

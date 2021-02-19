@@ -4,6 +4,10 @@ export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
+  // buildDir: https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-builddir
+  // 기본값은  .nuxt 디렉토리입니다
+  // buildDir: 'nuxt-dist',
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - j3-frontend',
@@ -51,7 +55,7 @@ export default {
   // Proxy module configuration: https://github.com/nuxt-community/proxy-module#readme
   proxy: {
     '/api': {
-      target: 'http://localhost:9999',
+      target: 'http://localhost:20000', //  개발 시 프록시 지정
       logLevel: 'debug'
     },
   },

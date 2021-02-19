@@ -6,9 +6,7 @@
       <!--        서치 바-->
       <Header />
       <!--        서치 바 끝-->
-      <v-container>
-        <nuxt />
-      </v-container>
+      <nuxt class="mt-10" />
     </v-main>
   </v-app>
 </template>
