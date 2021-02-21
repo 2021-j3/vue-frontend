@@ -29,7 +29,7 @@ export default function ({ $axios, redirect }, inject) {
     },
     (error) => {
       console.error('plugins/axios.js/onResponseError:\n', error)
-      redirect('/errors/' + error.response.status)
+      // redirect('/errors/' + error.response.status)
       return Promise.reject(error)
     }
   )

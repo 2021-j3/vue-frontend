@@ -5,22 +5,46 @@ export const state = () => ({
   dummyProduct: {
     product_id: null,
     account: null,
-    title: '서버 연결 실패',
+    title: '[연결 실패] 서버 연결 실패 했습니당]',
     metaTitle: '',
     slug: '#',
-    sku: '',
-    price: '',
-    discountRate: '',
-    thumbnailPath: '',
+    sku: 'sku_number_1314',
+    price: 48451,
+    discountRate: 9,
+    thumbnailPath: 'https://dummyimage.com/150x150/000/ffae.png',
     imagePath: 'https://dummyimage.com/800x2160/000/ffae.png',
     content: '',
     createdAt: null,
     updatedAt: null,
     startsAt: null,
     endsAt: null,
-    categories: null,
-    tags: null,
+    categories: [],
+    tags: [
+      {
+        category_id: 1945,
+        content: '',
+        meta_title: 'meta information',
+        parent_id: null,
+        slug: '/tags/1945',
+        title: '연결실패 카테고리',
+      },
+      {
+        category_id: 1234,
+        content: '',
+        meta_title: 'meta information',
+        parent_id: null,
+        slug: '/tags/1234',
+        title: 'product가 없습니다',
+      },
+    ],
   },
+  selected: {
+    quantity: 1,
+  },
+  dummyCategoryTree: [
+    { category_id: 1, title: '카테고리' },
+    { category_id: 2, title: '서브카테고리' },
+  ],
 })
 
 export const mutations = {
@@ -28,6 +52,9 @@ export const mutations = {
     console.log('store/product.js/mutations/SET_PRODUCTS:\n', product)
     state.products = []
     state.products.push(product)
+  },
+  SET_SELECTED_QUANTITY(state, quantity) {
+    state.selected.quantity = quantity
   },
 }
 
@@ -56,8 +83,24 @@ export const getters = {
   // 계산된 속성을 반환하는 메소드
   // getStatus(state) { return '{status: ' + state.status + '}' }
   getProduct(state) {
-    console.log('store/product.js/actions/getProduct:\n', state.products)
-    if (state.products.length > 0) return state.products[0]
-    else return state.dummyProduct
+    console.log('store/product.js actions/getProduct:\n', state.products[0])
+    if (state.products[0] !== undefined && state.products[0] !== null)
+      return state.products[0]
+    console.log('good')
+    return state.dummyProduct
+  },
+  getTotalPrice(state) {
+    if (state.products[0] !== undefined && state.products[0] !== null)
+      return state.selected.quantity * state.products[0].price
+    console.log('good')
+    return state.selected.quantity * state.dummyProduct.price
+  },
+  getSelectedQuantity(state) {
+    return state.selected.quantity
+  },
+  getCategoryTree(state) {
+    return state.dummyCategoryTree.map((v) => {
+      return { text: v.title, href: 'categories/' + v.category_id }
+    })
   },
 }
