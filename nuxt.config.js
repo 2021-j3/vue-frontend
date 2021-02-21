@@ -28,7 +28,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/axios'
+    '~/plugins/axios',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -56,7 +56,7 @@ export default {
   proxy: {
     '/api': {
       target: 'http://localhost:20000', //  개발 시 프록시 지정
-      logLevel: 'debug'
+      logLevel: 'debug',
     },
   },
 

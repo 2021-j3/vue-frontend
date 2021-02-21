@@ -3,13 +3,13 @@
     <v-card height="120" color="green">
       <!--타이틀, 검색, 아이콘 버튼-->
       <v-row>
-        <v-col cols="2" offset="2">
+        <v-col cols="1" offset="1">
           <!--타이틀-->
           <v-layout justify-start>
             <h1>j3</h1>
           </v-layout>
         </v-col>
-        <v-col cols="4">
+        <v-col cols="5">
           <!--검색창-->
           <v-card flat class="justify-content pa-2 pt-0 pb-2">
             <v-text-field
@@ -25,9 +25,9 @@
             ></v-text-field>
           </v-card>
         </v-col>
-        <v-col cols="2">
+        <v-col cols="4">
           <!--회원정보 버튼-->
-          <v-layout align-end>
+          <v-layout justify-end>
             <v-btn text>회원정보</v-btn>
             <v-btn text>카드</v-btn>
           </v-layout>
@@ -35,7 +35,7 @@
       </v-row>
       <!--툴바-->
       <v-row>
-        <v-col cols="8" offset="2">
+        <v-col cols="10" offset="1">
           <!--툴바 / 카테고리 메뉴-->
           <v-menu v-model="categoriesMenu">
             <!--툴바 / 카테고리 메뉴 / 메뉴버튼-->
@@ -82,7 +82,7 @@
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>
-                <v-card>
+                <v-card :elevation="0">
                   <v-navigation-drawer
                     v-if="selectedCategory"
                     v-model="drawer"
