@@ -47,6 +47,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
+    // '@nuxtjs/auth',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -59,6 +60,22 @@ export default {
       logLevel: 'debug',
     },
   },
+
+  // auth: {
+  //   redirect:{
+  //     login: '/auth/login',
+  //     logout: '/',
+  //     callback: '/',
+  //     home: '/',
+  //   },
+  //   strategies:{
+  //     local: {
+  //       endpoints: {
+  //         login: { url: '/auth/login', method: 'post', propertyName: 'access'},
+  //       }
+  //     }
+  //   }
+  // },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -78,6 +95,10 @@ export default {
       },
     },
   },
+  //
+  // router:{
+  //   middleware: ['auth']
+  // },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
