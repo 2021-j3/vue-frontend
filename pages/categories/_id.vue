@@ -1,10 +1,10 @@
 <template>
   <div class="category_item mt-4">
-    <div class="categories">
-      <ul v-for="(item, index) in selectedCategory" :key="index">
-        <li>{{ item.title }}</li>
-      </ul>
-    </div>
+    <v-row>
+      <v-col cols="10" offset="1">
+        <v-breadcrumbs :items="categoryTree" divider="-"></v-breadcrumbs>
+      </v-col>
+    </v-row>
     <products />
   </div>
 </template>
@@ -13,10 +13,15 @@ import Products from '@/pages/products'
 
 export default {
   name: 'CategoriesId',
+  // 로그인 불필요
+  auth: false,
   components: { Products },
   computed: {
     selectedCategory() {
       return this.$store.getters['category/getCategory']
+    },
+    categories() {
+      return this.$store.getters['categories/getCategoryTree']
     },
   },
   created() {},

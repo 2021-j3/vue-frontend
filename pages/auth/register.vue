@@ -14,6 +14,8 @@
 <script>
 export default {
   name: 'Register',
+  // 로그인 불필요
+  auth: false,
   data: () => ({}),
 
   methods: {

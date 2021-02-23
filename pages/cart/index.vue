@@ -3,26 +3,32 @@
     <v-row> 장바구니 </v-row>
     <v-row>
       <v-col cols="8" offset="1">
-        <v-card color="white">
+        <v-card color="pink">
           <v-list subheader>
-            <v-subheader>Recent chat</v-subheader>
-
-            <v-list-item v-for="chat in recent" :key="chat.title">
-              <v-list-item-avatar>
-                <v-img :alt="`${chat.title} avatar`" :src="chat.avatar"></v-img>
-              </v-list-item-avatar>
-
-              <v-list-item-content>
-                <v-list-item-title v-text="chat.title"></v-list-item-title>
-              </v-list-item-content>
-
-              <v-list-item-icon>
-                <v-icon :color="chat.active ? 'deep-purple accent-4' : 'grey'">
-                  mdi-message-outline
-                </v-icon>
-              </v-list-item-icon>
+            <v-subheader>
+              <v-btn depressed> 전체 선택 </v-btn>
+              <v-btn depressed> 선택 삭제 </v-btn>
+            </v-subheader>
+            <v-list-item v-for="cartItem in cart" :key="cartItem.title">
+              <template #default="{ active }">
+                <v-list-item-action>
+                  <v-checkbox :input-value="active"></v-checkbox>
+                </v-list-item-action>
+                <v-list-item-icon>
+                  <v-img
+                    :alt="`${cartItem.title}`"
+                    :src="cartItem.thumbnailPath"
+                  ></v-img>
+                </v-list-item-icon>
+                <v-list-item-content class="ml-5">
+                  <v-list-item-title
+                    v-text="cartItem.title"
+                  ></v-list-item-title>
+                </v-list-item-content>
+              </template>
             </v-list-item>
           </v-list>
+          총 주문금액 : 얼마
         </v-card>
       </v-col>
       <v-col cols="1">
@@ -34,34 +40,24 @@
 
 <script>
 export default {
-  name: 'MyCart',
+  name: 'Cart',
   // 로그인 불필요
   auth: false,
   data: () => ({
-    recent: [
+    cart: [
       {
         active: true,
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-        title: 'Jason Oner',
+        thumbnailPath: 'https://placeimg.com/50/50/any',
+        title: '상추',
       },
       {
         active: true,
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        title: 'Mike Carlson',
+        thumbnailPath: 'https://placeimg.com/50/50/any',
+        title: '부리또',
       },
       {
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-        title: 'Cindy Baker',
-      },
-      {
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-        title: 'Ali Connors',
-      },
-    ],
-    previous: [
-      {
-        title: 'Travis Howard',
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
+        thumbnailPath: 'https://placeimg.com/50/50/any',
+        title: '아스파라거스',
       },
     ],
   }),

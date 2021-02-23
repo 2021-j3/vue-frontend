@@ -16,11 +16,11 @@ export default {
       lang: 'en',
     },
     meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      {charset: 'utf-8'},
+      {name: 'viewport', content: 'width=device-width, initial-scale=1'},
+      {hid: 'description', name: 'description', content: ''},
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'}],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -47,11 +47,14 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
-    // '@nuxtjs/auth',
+    '@nuxtjs/auth',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    // 배포모드에서 사용'
+    baseURL: 'http://localhost:20000',
+  },
 
   // Proxy module configuration: https://github.com/nuxt-community/proxy-module#readme
   proxy: {
@@ -61,27 +64,37 @@ export default {
     },
   },
 
-  // auth: {
-  //   redirect:{
-  //     login: '/auth/login',
-  //     logout: '/',
-  //     callback: '/',
-  //     home: '/',
-  //   },
-  //   strategies:{
-  //     local: {
-  //       endpoints: {
-  //         login: { url: '/auth/login', method: 'post', propertyName: 'access'},
-  //       }
-  //     }
-  //   }
-  // },
+  auth: {
+    redirect: {
+      login: '/auth/login',
+    },
+
+    strategies: {
+      local: {
+        // auth 관련 api 관리
+        endpoints: {
+          // data { email, role, token } 이므로 토큰의 경로는 data.token
+          login: { url: '/api/accounts/login', method: 'post', propertyName: 'data.token' },
+          user: false,
+          logout: false,
+        },
+        tokenRequired: true,
+        tokenType: 'Bearer',
+      },
+    },
+    cookie:{
+      prefix: 'AUTHENTIFICATION',
+    },
+    watchLoggedIn: true,
+    resetOnError: true,
+    plugins: ['~/plugins/auth.js'],
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,
@@ -96,9 +109,9 @@ export default {
     },
   },
   //
-  // router:{
-  //   middleware: ['auth']
-  // },
+  router: {
+    middleware: ['auth'],
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

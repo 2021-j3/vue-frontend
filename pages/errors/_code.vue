@@ -12,6 +12,8 @@
 <script>
 export default {
   name: 'ErrorCode',
+  // 빌드에 포함되지 않음
+  auth: false,
   data() {
     return {
       information: {
@@ -73,9 +75,6 @@ export default {
   computed: {
     errorCode() {
       return this.$route.params.code
-    },
-    categories() {
-      return this.$store.getters['categories/getCategoryTree']
     },
   },
   watch: {

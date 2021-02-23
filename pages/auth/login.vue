@@ -15,7 +15,11 @@
 export default {
   name: 'Login',
   methods: {
-    onsubmit(value) {},
+    onsubmit(value) {
+      this.$auth
+        .loginWith('local', { data: value })
+        .then(() => console.log('loggedIn'))
+    },
   },
 }
 </script>
