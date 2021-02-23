@@ -73,6 +73,8 @@
 <script>
 export default {
   name: 'ProductsId',
+  // 로그인 불필요
+  auth: false,
   computed: {
     product() {
       return this.$store.getters['product/getProduct']

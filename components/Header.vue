@@ -27,9 +27,14 @@
         </v-col>
         <v-col cols="4">
           <!--회원정보 버튼-->
-          <v-layout justify-end>
-            <v-btn text>회원정보</v-btn>
-            <v-btn text>카드</v-btn>
+          <v-layout v-if="loggedIn" justify-end>
+            <v-btn text @click.prevent="logout">로그아웃</v-btn>
+            <v-btn text :to="{ path: '/myj3/memberInfo' }">회원정보</v-btn>
+            <v-btn text :to="{ path: '/cart' }">장바구니</v-btn>
+          </v-layout>
+          <v-layout v-else justify-end>
+            <v-btn text :to="{ path: '/auth/login' }">로그인</v-btn>
+            <v-btn text :to="{ path: '/auth/register' }">회원가입</v-btn>
           </v-layout>
         </v-col>
       </v-row>
@@ -119,9 +124,9 @@ export default {
   data() {
     return {
       drawer: false,
-      // categories: [],
       selectedCategory: null,
       categoriesMenu: false,
+      loggedIn: false,
     }
   },
   computed: {
@@ -140,10 +145,14 @@ export default {
   },
   created() {
     this.$store.dispatch('categories/loadCategories')
+    this.loggedIn = this.$auth.loggedIn
   },
   methods: {
     searchByQueryString() {
       this.$store.dispatch('products/findProducts')
+    },
+    logout() {
+      this.$auth.logout()
     },
   },
 }

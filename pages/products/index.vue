@@ -46,6 +46,8 @@
 import ProductCard from '@/components/ProductCard'
 export default {
   name: 'Products',
+  // 로그인 불필요
+  auth: false,
   component: {
     ProductCard,
   },

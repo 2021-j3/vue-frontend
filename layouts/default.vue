@@ -1,10 +1,10 @@
 <template>
-  <v-app dark>
+  <v-app>
     <VueNavigation></VueNavigation>
     <v-main>
       <HeaderCommercial />
       <!--        서치 바-->
-      <Header />
+      <Header :key="loggedIn" />
       <!--        서치 바 끝-->
       <nuxt class="mt-10" />
     </v-main>
@@ -22,6 +22,11 @@ export default {
     HeaderCommercial,
     VueNavigation,
     Header,
+  },
+  computed: {
+    loggedIn() {
+      return this.$auth.loggedIn
+    },
   },
 }
 </script>
