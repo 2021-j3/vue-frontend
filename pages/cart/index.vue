@@ -1,6 +1,5 @@
 <template>
   <div class="cart_item">
-    <v-row> 장바구니 </v-row>
     <v-row>
       <v-col cols="8" offset="1">
         <v-card color="pink">

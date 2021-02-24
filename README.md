@@ -1,5 +1,7 @@
 # j3-frontend
 
+![screenshot](img/screenshot.gif)
+
 ## Build Setup
 
 ```bash

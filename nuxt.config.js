@@ -74,13 +74,18 @@ export default {
         // auth 관련 api 관리
         endpoints: {
           // data { email, role, token } 이므로 토큰의 경로는 data.token
-          login: { url: '/api/accounts/login', method: 'post', propertyName: 'data.token' },
+          login: { url: '/api/accounts/login', method: 'post', propertyName: 'token' },
           user: false,
+          // user: { url: '/api/accounts/my', method: 'get' },
           logout: false,
         },
         tokenRequired: true,
         tokenType: 'Bearer',
       },
+      // user: {
+      //   property: false,
+      //   authFetch: true,
+      // }
     },
     cookie:{
       prefix: 'AUTHENTIFICATION',
