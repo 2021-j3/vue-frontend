@@ -1,4 +1,4 @@
-export default function ({ $axios, redirect }, inject) {
+export default function ({ $axios, redirect, store }, inject) {
   const api = $axios.create({
     baseURL: '/api',
     headers: {
@@ -11,7 +11,11 @@ export default function ({ $axios, redirect }, inject) {
   // request 를 처리하는 interceptors
   api.interceptors.request.use(
     (request) => {
-      console.log('plugins/axios.js/onRequest:\n', request)
+      if (store.$auth.loggedIn) {
+        request.headers.common.Authorization =
+          'Bearer ' + store.$auth.user.token
+      }
+      console.log('plugins/axios.js onRequest:\n', request)
       return request
     },
     (error) => {

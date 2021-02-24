@@ -16,9 +16,13 @@ export default {
   name: 'Login',
   methods: {
     onsubmit(value) {
-      this.$auth
-        .loginWith('local', { data: value })
-        .then(() => console.log('loggedIn'))
+      console.log('click login')
+      this.$auth.loginWith('local', { data: value }).then((response) => {
+        console.log('then login')
+        // this.$auth.setUser(response.data)
+        this.$axios.setToken(response.data.token)
+        console.log('login', response)
+      })
     },
   },
 }
