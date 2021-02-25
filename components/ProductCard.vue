@@ -7,8 +7,14 @@
         <div>
           {{ contentValue }}
         </div>
+        <div v-if="discountPrice !== 0">{{ priceValue }} 원</div>
         <div>
-          {{ priceValue }}
+          <span class="product-price display-1">{{ priceValue }}</span>
+          <span
+            class="product-original-price text-decoration-line-through text--disabled"
+          >
+            {{ originalPriceValue }}원
+          </span>
         </div>
       </v-card-text>
     </v-card>
@@ -24,6 +30,7 @@ export default {
     title: { type: String, default: '' },
     content: { type: String, default: '' },
     price: { type: Number, default: 0 },
+    discountPrice: { type: Number, default: 0 },
   },
   data() {
     return {
@@ -32,6 +39,7 @@ export default {
       titleValue: 'title',
       contentValue: 'content',
       priceValue: 0,
+      originalPriceValue: 0,
     }
   },
   created() {
@@ -40,7 +48,8 @@ export default {
     this.$data.thumbnailPatValueh = this.thumbnailPath
     this.$data.titleValue = this.title
     this.$data.contentValue = this.content
-    this.$data.priceValue = this.price + '원'
+    this.$data.priceValue = this.price - this.discountPrice
+    this.$data.originalPriceValue = this.price
   },
 }
 </script>

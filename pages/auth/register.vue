@@ -21,6 +21,7 @@ export default {
   methods: {
     onsubmit(value) {
       console.log(value)
+      this.$store.dispatch('account/createAccount', value)
     },
   },
 }

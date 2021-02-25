@@ -10,8 +10,8 @@ export const state = () => ({
     slug: '#',
     sku: 'sku_number_1314',
     price: 48451,
-    discountRate: 9,
-    thumbnailPath: 'https://dummyimage.com/150x150/000/ffae.png',
+    discount_price: 9,
+    thumbnail_path: 'https://dummyimage.com/150x150/000/ffae.png',
     imagePath: 'https://dummyimage.com/800x2160/000/ffae.png',
     content: '',
     createdAt: null,
@@ -88,6 +88,9 @@ export const getters = {
       return state.products[0]
     console.log('good')
     return state.dummyProduct
+  },
+  getDiscountedPrice(state) {
+    return state.products.price - state.products.discount_price
   },
   getTotalPrice(state) {
     if (state.products[0] !== undefined && state.products[0] !== null)
