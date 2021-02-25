@@ -27,12 +27,13 @@ export default function ({ $axios, redirect, store }, inject) {
   // response 를 처리하는 interceptors
   api.interceptors.response.use(
     (response) => {
-      console.log('plugins/axios.js/onResponse:\n', response)
+      console.log('plugins/axios.js onResponse:\n', response)
       // 실제 데이터는 response.response.data.data 에 들어있음
       return new Promise((resolve) => resolve(response.data))
     },
     (error) => {
-      console.log('plugins/axios.js/onResponseError:\n', error)
+      console.log('plugins/axios.js onResponseError:\n', error)
+      console.log(error.data)
       // redirect('/errors/' + error.response.status)
       return Promise.reject(error)
     }

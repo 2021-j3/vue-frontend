@@ -53,13 +53,13 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // 배포모드에서 사용'
-    baseURL: 'http://localhost:20000',
+    baseURL: 'http://localhost:20001',
   },
 
   // Proxy module configuration: https://github.com/nuxt-community/proxy-module#readme
   proxy: {
     '/api': {
-      target: 'http://localhost:20000', //  개발 시 프록시 지정
+      target: 'http://localhost:20001', //  개발 시 프록시 지정
       logLevel: 'debug',
     },
   },

@@ -21,7 +21,7 @@
     ></v-text-field>
 
     <v-text-field
-      v-model="formData.lastName"
+      v-model="formData.last_name"
       :rules="requiredRules"
       :counter="10"
       label="* 성"
@@ -29,7 +29,7 @@
     ></v-text-field>
 
     <v-text-field
-      v-model="formData.firstName"
+      v-model="formData.first_name"
       :rules="requiredRules"
       :counter="10"
       label="* 이름"
@@ -37,12 +37,18 @@
     ></v-text-field>
 
     <v-select
-      v-model="formData.accountType"
+      v-model="formData.account_type"
       :items="accountTypeOptions"
       :rules="requiredRules"
       label="* 어카운트 타입"
       required
     ></v-select>
+
+    <v-text-field
+      v-model="formData.phone_number"
+      :counter="10"
+      label="휴대폰 번호"
+    ></v-text-field>
 
     <v-select
       v-model="formData.gender"
@@ -54,12 +60,6 @@
       v-model="formData.birthday"
       :counter="10"
       label="생일"
-    ></v-text-field>
-
-    <v-text-field
-      v-model="formData.phoneNumber"
-      :counter="10"
-      label="휴대폰 번호"
     ></v-text-field>
 
     <v-btn :disabled="!valid" class="mr-4" type="submit"> 등록 </v-btn>
@@ -85,13 +85,12 @@ export default {
     formData: {
       email: '',
       password: '',
-      lastName: '',
-      firstName: '',
-      accountType: null,
+      last_name: '',
+      first_name: '',
+      account_type: null,
+      phone_number: null,
       gender: null,
-      select: null,
       birthday: null,
-      phoneNumber: null,
     },
   }),
 
