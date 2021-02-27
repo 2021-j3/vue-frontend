@@ -16,7 +16,8 @@
     "@nuxtjs/proxy": "^2.1.0",
     "core-js": "^3.8.3",
     "eslint-loader": "^4.0.2",
-    "nuxt": "^2.14.12"
+    "nuxt": "^2.14.12",
+    "nuxt-vuex-localstorage": "^1.2.7"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^5.0.0",

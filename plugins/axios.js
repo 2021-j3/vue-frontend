@@ -11,9 +11,12 @@ export default function ({ $axios, redirect, store }, inject) {
   // request 를 처리하는 interceptors
   api.interceptors.request.use(
     (request) => {
+      // 로그인  여부 확인
       if (store.$auth.loggedIn) {
+        // auth token 추가
         request.headers.common.Authorization =
-          'Bearer ' + store.$auth.user.token
+          store.getters['myAuth/getAuthorization']
+        console.log('plugins/axios.js onRequest:\nCalled with Authorization')
       }
       console.log('plugins/axios.js onRequest:\n', request)
       return request

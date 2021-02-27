@@ -152,7 +152,7 @@ export default {
       this.$store.dispatch('products/findProducts')
     },
     logout() {
-      this.$auth.logout()
+      this.$store.dispatch('myAuth/logout')
     },
   },
 }

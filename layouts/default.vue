@@ -14,7 +14,7 @@
 <script>
 import VueNavigation from '@/components/VueNavigation'
 import HeaderCommercial from '@/components/HeaderCommercial'
-import Header from '@/components/Header'
+import Header from '@/components/Navigations/Header'
 
 export default {
   name: 'Default',

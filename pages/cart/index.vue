@@ -25,7 +25,7 @@
             <!--리스트 아이템-->
             <v-list-item-group v-model="selectedNodeIds" multiple>
               <v-list-item
-                v-for="cartItem in cart"
+                v-for="cartItem in cart.cart_items"
                 :key="cartItem.cart_item_id"
               >
                 <template #default="{ active }">
@@ -75,12 +75,10 @@
         <v-card>
           <v-card color="yellow"> 주소 </v-card>
           <v-card color="red">
-            <!-- 선택지 -->
-            <v-layout class="options mt-4" justify-end>
-              <v-flex xs3 align-self-center
-                ><span>{{ totalPrice }} 원</span>
-              </v-flex>
-            </v-layout>
+            결제 예정 금액
+            {{ cart.item_price_total }}
+            {{ cart.item_discount }}
+
             <!-- 장바구니, 구매 -->
             <v-layout justify-space-between>
               <v-spacer></v-spacer>
@@ -99,35 +97,54 @@ export default {
   // 로그인 불필요
   auth: false,
   data: () => ({
-    cart: [
-      {
-        id: 0,
-        cart_item_id: 1,
-        active: true,
-        thumbnailPath: 'https://placeimg.com/50/50/any',
-        title: '상추',
-        quantity: 1,
-        price: 1000,
-      },
-      {
-        id: 1,
-        cart_item_id: 2,
-        active: true,
-        thumbnailPath: 'https://placeimg.com/50/50/any',
-        title: '부리또',
-        quantity: 1,
-        price: 20000,
-      },
-      {
-        id: 2,
-        cart_item_id: 3,
-        active: true,
-        thumbnailPath: 'https://placeimg.com/50/50/any',
-        title: '아스파라거스',
-        quantity: 1,
-        price: 3000,
-      },
-    ],
+    cart: {
+      item_price_total: 0,
+      item_discount: 0,
+      tax: 0, // 보여줄일이 없는디
+      shipping: 0,
+      user_discount: 0,
+      grand_total: 0,
+      first_name: '',
+      last_name: '',
+      phone_number: '',
+      email: '',
+      road_address: '',
+      address: '',
+      city: '',
+      province: '',
+      country: '',
+      zip_code: 0,
+      content: '',
+      cart_items: [
+        {
+          id: 0,
+          cart_item_id: 1,
+          active: true,
+          thumbnailPath: 'https://placeimg.com/50/50/any',
+          title: '상추',
+          quantity: 1,
+          price: 1000,
+        },
+        {
+          id: 1,
+          cart_item_id: 2,
+          active: true,
+          thumbnailPath: 'https://placeimg.com/50/50/any',
+          title: '부리또',
+          quantity: 1,
+          price: 20000,
+        },
+        {
+          id: 2,
+          cart_item_id: 3,
+          active: true,
+          thumbnailPath: 'https://placeimg.com/50/50/any',
+          title: '아스파라거스',
+          quantity: 1,
+          price: 3000,
+        },
+      ],
+    },
     selectedNodeIds: [],
   }),
   computed: {
@@ -137,6 +154,9 @@ export default {
     allNodesSelected() {
       return this.selectedNodeIds.length === this.cart.length
     },
+  },
+  created() {
+    this.$store.dispatch('cart/fetchCart')
   },
   methods: {
     deleteNodes(nodeIds) {

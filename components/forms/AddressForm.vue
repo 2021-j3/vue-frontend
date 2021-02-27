@@ -64,7 +64,7 @@
       label="생일"
     ></v-text-field>
 
-    <v-btn :disabled="!valid" class="mr-4" type="submit"> 등록 </v-btn>
+    <v-btn :disabled="!valid" class="mr-4" type="submit"> 등록</v-btn>
   </v-form>
 </template>
 
@@ -74,6 +74,21 @@ export default {
   props: {
     // eslint-disable-next-line vue/require-default-prop
     onsubmit: { type: Function },
+    formData: {
+      type: Object,
+      default() {
+        return {
+          email: '',
+          password: '',
+          last_name: '',
+          first_name: '',
+          account_type: null,
+          phone_number: null,
+          gender: null,
+          birthday: null,
+        }
+      },
+    },
   },
   data: () => ({
     valid: true,
@@ -84,16 +99,6 @@ export default {
     ],
     accountTypeOptions: ['USER', 'SELLER'],
     genderOptions: ['MALE', 'FEMALE'],
-    formData: {
-      email: '',
-      password: '',
-      last_name: '',
-      first_name: '',
-      account_type: null,
-      phone_number: null,
-      gender: null,
-      birthday: null,
-    },
   }),
 
   methods: {

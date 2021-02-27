@@ -13,16 +13,13 @@
 
 <script>
 export default {
-  name: 'Login',
+  name: 'AuthLogin',
   methods: {
     onsubmit(value) {
+      // const array = new Uint32Array(10)
+      // this.$store.commit('myAuth/SET_TOKEN_NAME', this.window.crypto)
       console.log('click login')
-      this.$auth.loginWith('local', { data: value }).then((response) => {
-        console.log('then login')
-        // this.$auth.setUser(response.data)
-        this.$axios.setToken(response.data.token)
-        console.log('login', response)
-      })
+      this.$store.dispatch('myAuth/login', value)
     },
   },
 }
