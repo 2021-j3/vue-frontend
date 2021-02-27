@@ -48,18 +48,19 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     '@nuxtjs/auth',
+    'nuxt-vuex-localstorage',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // 배포모드에서 사용'
-    baseURL: 'http://localhost:20001',
+    baseURL: 'http://localhost:20000',
   },
 
   // Proxy module configuration: https://github.com/nuxt-community/proxy-module#readme
   proxy: {
     '/api': {
-      target: 'http://localhost:20001', //  개발 시 프록시 지정
+      target: 'http://localhost:20000', //  개발 시 프록시 지정
       logLevel: 'debug',
     },
   },
@@ -115,11 +116,14 @@ export default {
   },
   //
   router: {
-    middleware: ['auth'],
+    middleware: ['auth', 'redirection'],
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    transpile: [
+      'nuxt-vuex-localstorage'
+    ],
     extend(config, ctx) {
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {

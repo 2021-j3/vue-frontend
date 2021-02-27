@@ -20,6 +20,26 @@ export const mutations = {
   //   )
 }
 
-export const actions = {}
+export const actions = {
+  fetchCart(context) {
+    if (this.$auth.loggedIn) {
+      context.dispatch('fetchCartFromServer')
+    }
+  },
+
+  fetchCartFromServer(context, id) {
+    console.log('store/product.js/actions/getProduct:\nid is', id)
+    this.$api
+      .get('/cart/my')
+      .then((data) => data.data)
+      .then((data) => {
+        console.log('store/product.js/actions/getProduct:\n', data)
+        context.commit('SET_PRODUCT', data)
+      })
+      .catch((error) => {
+        console.error('store/product.js/actions/getProduct:\n', error)
+      })
+  },
+}
 
 export const getters = {}

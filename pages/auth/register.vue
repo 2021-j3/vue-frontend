@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'Register',
+  name: 'AuthRegister',
   // 로그인 불필요
   auth: false,
   data: () => ({}),

@@ -13,6 +13,10 @@ export const mutations = {
   // store/index.js는 root 모듈로 rootState 를 통해 접근할 수 있다
   // setRootStatus(state, param, rootState) { rootState.status = ... }
   // .vue 에서 mutation을 호출할 때는 this.$store.commit('뮤테이션이름', 인자
+
+  SET_TOKEN(state, name) {
+    state.sessionStorage.token = name
+  },
 }
 
 export const actions = {
