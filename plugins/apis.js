@@ -48,6 +48,73 @@ export default function ({ $axios, redirect, store }, inject) {
     }
   )
   /**
+   * 주소를 생성한다
+   * @param item
+   * @returns {*}
+   */
+  const createAddress = function (item) {
+    return new Promise((resolve, reject) => {
+      api.post('/address', item)
+        .then((data) => resolve(data))
+    })
+  }
+
+  /**
+   * 주소를 가져온다
+   * @param id { Number } 상품 아이디
+   * @returns { Promise } 상품을 반환하는 프로미스 객체
+   */
+  const getMyAddresses = function () {
+    return new Promise((resolve, reject) => {
+      api
+        .get('/address/my')
+        .then((data) => {
+          console.log(
+            'plugins/apis getMyAddresses:\n 서버에서 받은 카트:',
+            data
+          )
+          resolve(data)
+        })
+        .catch((error) => reject(error))
+    })
+  }
+  /**
+   * 주소를 갱신한다
+   * @param id {Number } 주소 아이디
+   * @param address { Object } 주소 객체
+   * @Param address.address_id { Number } 주소 아이디
+   * @Param address.address { String } 구 주소
+   * @Param address.road_address { String } 신 주소
+   * @Param address.city { String } 시, 구
+   * @Param address.province { String } 도, 시
+   * @Param address.country { String } 국가 코드 (e.g. KR)
+   * @Param address.zip_code { String } 우편번호
+   * @returns {*}
+   */
+  const updateMyAddresses = function (id, address) {
+    return new Promise((resolve, reject) => {
+      api.get('/address/' + id, address).then((data) => {
+        console.log(
+          'plugins/apis updateMyAddresses:\n 서버에서 받은 카트:',
+          data
+        )
+        resolve(data)
+      })
+    })
+  }
+  /**
+   *  주소를 삭제한다
+   * @param id { Number }
+   * @returns {*}
+   */
+  const deleteAddress = function(id){
+    return new Promise(resolve=>{
+      api.delete('/address/' + id).then(()=>{
+        resolve()
+      })
+    })
+  }
+  /**
    * 로그인한 고객의 카트를 불러온다
    * @returns { Promise } 카트를 반환하는 프로미스 객체
    */
@@ -130,28 +197,22 @@ export default function ({ $axios, redirect, store }, inject) {
         })
     })
   }
-  let lastQuery = null
-  let lastPagination = null
-  let cachedProducts = {}
-  function returnPageData(pagination) {
-    return {
-      contents: cachedProducts.contents.filter(
-        (item, index) =>
-          index >= (pagination.page - 1) * pagination.size &&
-          index < pagination.page * pagination.size
-      ),
-      last_page: cachedProducts.last_page,
-      current_page: pagination.page,
-      total: cachedProducts.total,
-    }
+
+  const apis = {
+    createAddress,
+    getMyCart,
+    getMyAddresses,
+    updateMyAddresses,
+    deleteAddress,
+    getProductById,
+    getProductByQuery,
   }
-  const apis = { getMyCart, getProductById, getProductByQuery }
   inject('apis', apis)
 }
 
 /**
 * currentFilter
-을 request param 으로 바꿔주는 메소드
+을 request param 으로 바꿔준다
 * @param conditions { Object } 쿼리와 페이지네이션 모두
 * @returns requestParameters { String }
 */
@@ -164,3 +225,28 @@ function getRequestParam(conditions) {
     })
     .join('&')
 }
+
+/**
+ * 저장된 상품 캐시데이터를 페이지단위로 돌려준다
+ * @Param pagination            { Object } 페이지 정보
+ * @Param pagination.pages       { Number=1 } 페이지 번호
+ * @Param pagination.size        { Number=10 } 페이지당 로딩 사이즈
+ * @Param pagination.order       { String="product_id" } 정렬 방법
+ * @Param pagination.by          { ('ASC'|'DES')='ASC' } 정렬 방향
+ * @returns {{total: (number|{jsMemoryEstimate: number, jsMemoryRange: [number, number]}|number|*), contents, last_page: (*|number), current_page}}
+ */
+function returnPageData(pagination) {
+  return {
+    contents: cachedProducts.contents.filter(
+      (item, index) =>
+        index >= (pagination.page - 1) * pagination.size &&
+        index < pagination.page * pagination.size
+    ),
+    last_page: cachedProducts.last_page,
+    current_page: pagination.page,
+    total: cachedProducts.total,
+  }
+}
+let lastQuery = null
+let lastPagination = null
+let cachedProducts = {}

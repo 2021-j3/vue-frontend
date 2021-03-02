@@ -43,7 +43,6 @@ export default {
     }
   },
   created() {
-    console.log('components/ProductCard.vue/created:\n', this.title)
     this.$data.slugValue = this.slug
     this.$data.thumbnailPatValueh = this.thumbnailPath
     this.$data.titleValue = this.title
