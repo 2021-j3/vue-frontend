@@ -32,27 +32,27 @@ export const mutations = {
 export const actions = {
   createAddress(context, item) {
     console.log(item)
-    this.$api.post('/address', item).then((data) => {
+    this.$apis.createAddress(item)n.then((data) => {
       context.commit('ADD_ADDRESS', item)
     })
   },
 
   fetchAddresses(context) {
-    this.$api.get('/address/my').then((data) => {
+    this.$apis.getMyAddresses().then((data) => {
       context.commit('SET_ADDRESSES', data)
     })
   },
 
   updateAddress(context, item) {
     const id = context.state.addresses.indexOf(item).address_id
-    this.$api.put('/address/' + id, item).then((data) => {
+    this.$apis.updateMyAddresses(id, item).then((data) => {
       context.commit('UPDATE_ADDRESS', item)
     })
   },
 
   deleteAddress(context, item) {
     const id = context.state.addresses.indexOf(item).address_id
-    this.$api.delete('/address/' + id)
+    this.$apis.deleteAddress((id)
   },
 }
 

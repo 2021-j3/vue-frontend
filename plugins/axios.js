@@ -41,5 +41,7 @@ export default function ({ $axios, redirect, store }, inject) {
       return Promise.reject(error)
     }
   )
+  // accounts
+
   inject('api', api)
 }

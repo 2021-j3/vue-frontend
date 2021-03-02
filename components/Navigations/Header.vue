@@ -30,7 +30,14 @@
           <v-layout v-if="loggedIn" justify-end>
             <v-btn text @click.prevent="logout">로그아웃</v-btn>
             <v-btn text :to="{ path: '/myj3/memberInfo' }">회원정보</v-btn>
-            <v-btn text :to="{ path: '/cart' }">장바구니</v-btn>
+            <!--카트에 아이템이 있는 경우-->
+            <v-btn v-if="numberOfCartItems !== 0" text :to="{ path: '/cart' }">
+              <v-badge color="pink" :content="numberOfCartItems">
+                장바구니
+              </v-badge>
+            </v-btn>
+            <!--카트에 아이템이 없는 경우-->
+            <v-btn v-else text :to="{ path: '/cart' }"> 장바구니 </v-btn>
           </v-layout>
           <v-layout v-else justify-end>
             <v-btn text :to="{ path: '/auth/login' }">로그인</v-btn>
@@ -50,7 +57,8 @@
                 dark
                 icon
                 v-bind="attrs"
-                min-width="100"
+                min-width="120"
+                class="mx-4"
                 v-on="on"
                 @mouseover="categoriesMenu = true"
               >
@@ -121,6 +129,9 @@
 <script>
 export default {
   name: 'Header',
+  props: {
+    numberOfCartItems: { type: Number, default: 0 },
+  },
   data() {
     return {
       drawer: false,

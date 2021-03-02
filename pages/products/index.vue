@@ -53,8 +53,12 @@ export default {
   },
   computed: {
     products() {
-      console.log('pages / products / index.vue / computed / products')
-      return this.$store.getters['products/getProducts']
+      const items = this.$store.getters['products/getProducts']
+      console.log(
+        'pages/products/index.vue computed/products:\n현재페이지 프로덕트:',
+        items
+      )
+      return items
     },
     orderBy: {
       get() {
@@ -78,7 +82,12 @@ export default {
       },
     },
     lastPage() {
-      return this.$store.getters['products/getLastPage']
+      console.log(
+        '마지막 페이지는 :',
+        this.$store.getters['products/getLastPage']
+      )
+      const lastPageNum = this.$store.getters['products/getLastPage']
+      return lastPageNum
     },
   },
   watch: {
@@ -99,7 +108,10 @@ export default {
     },
   },
   created() {
-    console.log('pages / products / index.vue / created')
+    console.log(
+      'pages/products / index.vue/created:\n 프로덕트 뷰 생성됨 쿼리=',
+      this.$route.query
+    )
     this.$store.dispatch('products/findProducts', {
       query: this.$route.query.query,
       minPrice: this.$route.query.minPrice,
@@ -111,7 +123,6 @@ export default {
       order: this.$route.query.order,
       by: this.$route.query.by,
     })
-    // this.$store.dispatch('products/findProducts')
   },
   methods: {
     updateMinPrice(minPrice) {

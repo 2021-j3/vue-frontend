@@ -32,7 +32,7 @@ export const actions = {
       })
   },
   fetchAccount(context) {
-    this.$api.get('/account/my').then((data) => {
+    this.$api.get('/accounts/my').then((data) => {
       context.commit('SET_ACCOUNT', data)
     })
   },

@@ -13,3 +13,11 @@
     </v-col>
   </v-row>
 </template>
+
+<script>
+export default {
+  created() {
+    this.$j3Api.fetchAccount()
+  },
+}
+</script>
