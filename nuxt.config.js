@@ -3,7 +3,7 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
-
+  ssr: false,
   // buildDir: https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-builddir
   // 기본값은  .nuxt 디렉토리입니다
   // buildDir: 'nuxt-dist',
@@ -29,6 +29,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/axios',
+    '~/plugins/apis',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

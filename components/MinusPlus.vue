@@ -1,38 +1,75 @@
 <template>
-  <v-flex xs2>
+  <v-card color="yellow" elevation="0">
     <v-text-field
-      v-model="number"
-      outlined
-      hide-details
-      class="expand ma-0 pa-0"
+      v-model="_number"
+      class="centered-input ma-0"
       dense
-      width="1"
-      prepend-inner-icon="mdi-minus-circle-outline"
-      append-icon="mdi-plus-circle-outline"
-      min="1"
-      @click:prepend-inner="decrease"
-      @click:append="increase"
-    ></v-text-field>
-  </v-flex>
+      hide-details
+      suffix="개"
+      type="number"
+      @click.stop
+    >
+      <v-icon slot="append-outer" @click.stop="increase"> mdi-plus </v-icon>
+      <v-icon slot="prepend" @click.stop="decrease"> mdi-minus </v-icon>
+    </v-text-field>
+  </v-card>
 </template>
 
 <script>
 export default {
   name: 'MinusPlus',
-  data() {
-    return {
-      number: 0,
-    }
+  props: {
+    number: { type: Number, default: 1 },
+    onIncrease: {
+      type: Function,
+      default: null,
+    },
+    onDecrease: {
+      type: Function,
+      default: null,
+    },
+    refObject: { type: Object, default: null },
+    minNum: { type: Number, default: 1 },
+    maxNum: { type: Number, default: 100000000 },
+  },
+  computed: {
+    _number: {
+      get() {
+        return this.$props.number
+      },
+      set(value) {
+        value = parseInt(value)
+        if (value < this.$props.minNum) value = this.$props.minNum
+        // this.$emit('update:number', value, this.refObject)
+        this.emitOptional(value, this.refObject)
+      },
+    },
   },
   methods: {
     decrease() {
-      this.number -= 1
+      let newNum = this._number - 1
+      if (newNum < this.$props.minNum) newNum = this.$props.minNum
+      // this.$emit('update:number', newNum, this.refObject)
+      this.emitOptional(newNum, this.refObject)
     },
     increase() {
-      this.number += 1
+      let newNum = this._number + 1
+      if (newNum > this.$props.maxNum) newNum = this.$props.maxNum
+      // this.$emit('update:number', newNum, this.refObject)
+      this.emitOptional(newNum, this.refObject)
+    },
+    emitOptional(newNum, ref) {
+      if (this.refObject !== null) this.$emit('update', newNum, ref)
+      else this.$emit('update', newNum)
     },
   },
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+::v-deep input::-webkit-outer-spin-button,
+::v-deep input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+</style>

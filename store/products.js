@@ -8,7 +8,7 @@ export const state = () => ({
     categories: null,
     tags: null,
     page: 1,
-    size: 100,
+    size: 10,
     order: 'ASC',
     by: 'price',
   },
@@ -21,24 +21,18 @@ export const state = () => ({
     tags: null, // Array
     // 페이지
     page: 1, // Number
-    size: 100, // Number
+    size: 10, // Number
     order: 'ASC', // ASC, DES
     by: 'price', // productId, title, price, createdAt
   },
   products: [],
-  defaultPages: {
+  defaultPagination: {
     page: 1,
-    visiblePages: 8,
-    lastPage: 1,
-    itemsPerPage: 2,
-    currentMaxPage: 0,
+    last_page: 1,
   },
-  pages: {
+  pagination: {
     page: 1,
-    visiblePages: 8,
-    lastPage: 1,
-    itemsPerPage: 2,
-    currentMaxPage: 0,
+    last_page: 1,
   },
 })
 
@@ -49,8 +43,11 @@ export const mutations = {
    * @param page
    * @constructor
    */
-  __SET_CURRENT_PAGE(state, page) {
-    state.pages.page = page
+  __SET_CURRENT_PAGE(state, pageData) {
+    state.pagination.last_page = pageData.last_page
+    state.pagination.page = pageData.current_page
+    state.products = pageData.contents
+    console.log('현재 페이지를 설정했습니다.', pageData, state.pagination)
   },
   /**
    * vue 업데이트 시 리스트에 다른 id를 부여하기 위해 사용
@@ -58,9 +55,11 @@ export const mutations = {
    * @private
    */
   __CLEAR_PRODUCTS(state) {
-    console.log('store/product.js mutations/__CLEAR_PRODUCTS')
+    console.log(
+      'store/product.js mutations/__CLEAR_PRODUCTS:\n 상품을 모두 삭제'
+    )
     state.products = Object.assign([])
-    state.page = { ...state.defaultPages }
+    state.pagination = { ...state.defaultPagination }
   },
   /**
    * 새로운 조건으로 상품 목록을 가져옴
@@ -69,28 +68,30 @@ export const mutations = {
    * @private
    */
   __APPEND_PRODUCTS(state, resultSet) {
-    let cnt = 0
-    let chunkIndex = state.products.length
-    state.products.push([])
-    for (const i in resultSet.contents) {
-      if (i - cnt < state.pages.itemsPerPage) {
-        state.products[chunkIndex].push(resultSet.contents[i])
-      } else {
-        cnt += state.pages.itemsPerPage
-        chunkIndex += 1
-        state.products[chunkIndex] = Object.assign([])
-        state.products[chunkIndex].push(resultSet.contents[i])
-      }
-    }
-    state.pages.currentMaxPage = chunkIndex
-    state.pages.lastPage = parseInt(resultSet.total / state.pages.itemsPerPage)
-    console.log(
-      'store/product.js mutations/__APPEND_PRODUCTS:',
-      '\nrequest:',
-      arguments[1],
-      '\nresult: ',
-      state.pages
-    )
+    console.log('result is', resultSet.contents)
+    state.products = resultSet.contents
+    // let cnt = 0
+    // let chunkIndex = state.products.length
+    // state.products.push([])
+    // for (const i in resultSet.contents) {
+    //   if (i - cnt < state.pages.itemsPerPage) {
+    //     state.products[chunkIndex].push(resultSet.contents[i])
+    //   } else {
+    //     cnt += state.pages.itemsPerPage
+    //     chunkIndex += 1
+    //     state.products[chunkIndex] = Object.assign([])
+    //     state.products[chunkIndex].push(resultSet.contents[i])
+    //   }
+    // }
+    // state.pages.currentMaxPage = chunkIndex
+    // state.pages.lastPage = parseInt(resultSet.total / state.pages.itemsPerPage)
+    // console.log(
+    //   'store/product.js mutations/__APPEND_PRODUCTS:',
+    //   '\nrequest:',
+    //   arguments[1],
+    //   '\nresult: ',
+    //   state.pages
+    // )
   },
   /**
    * dispatch 에서 생성한 조건을 store 에 저장함
@@ -110,9 +111,9 @@ export const mutations = {
     state,
     { query, minPrice, maxPrice, categories, tags, page, size, order, by }
   ) {
-    const inputConditions = arguments[1]
-    Object.entries(inputConditions).forEach(([k, v]) => {
-      state.currentFilter[k] = v !== undefined ? v : null
+    Object.entries(state.defaultFilter).forEach(([k, v]) => {
+      state.currentFilter[k] =
+        arguments[1][k] !== undefined ? arguments[1][k] : v
     })
     console.log(
       'store/product.js mutations/__SET_CONDITIONS:',
@@ -133,6 +134,7 @@ export const actions = {
     Object.entries(arguments[1]).forEach(([k, v]) => {
       newFilter[k] = v === undefined ? state.defaultFilter[k] : v
     })
+    console.log('새로운 컨디션', newFilter)
     commit('__CLEAR_PRODUCTS')
     this.$router.push({ name: 'products', query: newFilter })
   },
@@ -141,9 +143,12 @@ export const actions = {
     { query, minPrice, maxPrice, categories, tags, page, size, order, by }
   ) {
     const updatedFilter = {}
-    Object.entries(arguments[1]).forEach(([k, v]) => {
-      updatedFilter[k] = v === undefined ? state.currentFilter[k] : v
+    Object.entries(state.currentFilter).forEach(([k, v]) => {
+      console.log(k, v)
+      updatedFilter[k] =
+        arguments[1][k] === undefined ? state.currentFilter[k] : arguments[1][k]
     })
+    console.log('새로운 필터', updatedFilter)
     commit('__CLEAR_PRODUCTS')
     this.$router.push({ name: 'products', query: updatedFilter })
   },
@@ -151,19 +156,25 @@ export const actions = {
     context,
     { query, minPrice, maxPrice, categories, tags, page, size, order, by }
   ) {
-    const selectedPage = arguments[1].page === undefined ? 1 : arguments[1].page
-    arguments[1].size = // bulk loading size
-      context.state.pages.visiblePages * context.state.pages.itemsPerPage
-    arguments[1].page = // bulk loading page
-      parseInt((selectedPage - 1) / context.state.pages.visiblePages) + 1
+    // const selectedPage = arguments[1].page === undefined ? 1 : arguments[1].page
+    // arguments[1].size = // bulk loading size
+    //   context.state.pages.visiblePages * context.state.pages.itemsPerPage
+    // arguments[1].page = // bulk loading page
+    //   parseInt((selectedPage - 1) / context.state.pages.visiblePages) + 1
 
-    const params = getRequestParam(arguments[1])
-    this.$api
-      .get('/products?' + params)
+    // const params = getRequestParam(arguments[1])
+    this.$apis
+      .getProductByQuery(
+        { query, minPrice, maxPrice, categories, tags },
+        { page, size, order, by }
+      )
+      // this.$api
+      //   .get('/products?' + params)
       .then((data) => {
         // 페이지 복구
-        arguments[1].page = selectedPage
-        context.commit('__APPEND_PRODUCTS', data)
+        console.log('여기 data 받았당', data, arguments[1])
+        // arguments[1].page = selectedPage
+        context.commit('__SET_CURRENT_PAGE', data)
         context.commit('__SET_CONDITIONS', arguments[1])
       })
       .catch((error) => {
@@ -177,16 +188,15 @@ export const actions = {
    * @constructor
    */
   setPage({ state, commit, dispatch }, page) {
-    console.log('store/product.js actions/setPage\n', arguments[1])
-    if (state.pages.lastPage < page) return
-    if (state.pages.currentMaxPage >= page) commit('__SET_CURRENT_PAGE', page)
-    else {
-      const newPageCondition = { ...state.currentFilter }
-      newPageCondition.page = page
-      dispatch('findProducts', newPageCondition).then(() => {
-        commit('__SET_CURRENT_PAGE', page)
-      })
-    }
+    console.log(
+      'store/product.js actions/setPage\n: 마우스 클릭에 의해 페이지 설정됨',
+      arguments[1]
+    )
+    const newPageCondition = { ...state.currentFilter }
+    newPageCondition.page = page
+    dispatch('findProducts', newPageCondition).then(() => {
+      commit('__SET_CURRENT_PAGE', page)
+    })
   },
 }
 
@@ -194,10 +204,10 @@ export const getters = {
   getProducts(state) {
     console.log(
       'store/product.js actions/getProducts:\n',
-      state.pages.page,
+      state.pagination.page,
       state.products
     )
-    return state.products[state.pages.page - 1]
+    return state.products
   },
   getQuery(state) {
     return state.currentFilter.query !== null ? state.currentFilter.query : ''
@@ -206,25 +216,9 @@ export const getters = {
     return state.currentFilter.order + '_' + state.currentFilter.by
   },
   getCurrentPage(state) {
-    return state.pages.page
+    return state.pagination.page
   },
   getLastPage(state) {
-    return state.pages.lastPage
+    return state.pagination.last_page
   },
-}
-
-/** 2021-02-17 penguin418
- * currentFilter
- 을 request param 으로 바꿔주는 메소드
- * @param conditions { Object }
- * @returns requestParameters { String }
- */
-function getRequestParam(conditions) {
-  return Object.entries(conditions)
-    .filter((v) => v[1] !== null && v[1] !== undefined)
-    .map((v, index) => {
-      if (v[1].isArray) return v[0] + '=' + v[1].join(',')
-      else return v[0] + '=' + v[1]
-    })
-    .join('&')
 }

@@ -44,22 +44,15 @@
         </div>
         <!-- 선택지 -->
         <v-layout class="options mt-4" justify-end>
-          <v-flex xs2>
-            <v-text-field
-              v-model="selectedQuantity"
-              outlined
-              hide-details
-              class="expand ma-0 pa-0"
-              dense
-              type="number"
-              width="1"
-              min="1"
-            ></v-text-field>
-          </v-flex>
-          <v-spacer></v-spacer>
-          <v-flex xs3 align-self-center
-            ><span>{{ totalPrice }} 원</span>
-          </v-flex>
+          <v-row>
+            <v-col cols="5" offset="4">
+              <minus-plus
+                :number="selectedQuantity"
+                @update="onQuantityChanged"
+              ></minus-plus>
+            </v-col>
+            <v-col cols="3">{{ totalPrice }} 원</v-col>
+          </v-row>
         </v-layout>
         <!-- 장바구니, 구매 -->
         <v-layout justify-space-between>
@@ -80,29 +73,35 @@ export default {
   auth: false,
   computed: {
     product() {
-      return this.$store.getters['product/getProduct']
+      return this.$store.getters['productItem/getProduct']
     },
     discountedPrice() {
-      return this.$store.getters['product/getDiscountedPrice']
+      return this.$store.getters['productItem/getDiscountedPrice']
     },
     totalPrice() {
-      return this.$store.getters['product/getTotalPrice']
+      return this.$store.getters['productItem/getTotalPrice']
     },
     selectedQuantity: {
       get() {
-        return this.$store.getters['product/getSelectedQuantity']
-      },
-      set(value) {
-        this.$store.commit('product/SET_SELECTED_QUANTITY', value)
+        return this.$store.getters['productItem/getSelectedQuantity']
       },
     },
     categoryTree() {
-      return this.$store.getters['product/getCategoryTree']
+      return this.$store.getters['productItem/getCategoryTree']
     },
   },
   created() {
     // 최초 실행됨
-    this.$store.dispatch('product/fetchProduct', this.$route.params.id)
+    console.log(
+      'products/_id.vue created:\n프로덕트 아이템뷰 생성됨 id =',
+      this.$route.params.id
+    )
+    this.$store.dispatch('productItem/fetchProduct', this.$route.params.id)
+  },
+  methods: {
+    onQuantityChanged(value) {
+      this.$store.commit('productItem/SET_SELECTED_QUANTITY', value)
+    },
   },
 }
 </script>

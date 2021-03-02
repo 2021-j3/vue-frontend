@@ -48,8 +48,8 @@ export const state = () => ({
 })
 
 export const mutations = {
-  SET_PRODUCT(state, product) {
-    console.log('store/product.js/mutations/SET_PRODUCTS:\n', product)
+  SET_PRODUCT_ITEM(state, product) {
+    console.log('store/productItem.js/mutations/SET_PRODUCT_ITEM:\n', product)
     state.products = []
     state.products.push(product)
   },
@@ -65,16 +65,15 @@ export const actions = {
    * @param id
    */
   fetchProduct(context, id) {
-    console.log('store/product.js/actions/getProduct:\nid is', id)
-    this.$api
-      .get('/products/' + id)
-      .then((data) => data.data)
+    console.log('store/productItem.js/actions/fetchProductItem:\nid is', id)
+    this.$apis
+      .getProductById(id)
       .then((data) => {
-        console.log('store/product.js/actions/getProduct:\n', data)
-        context.commit('SET_PRODUCT', data)
+        console.log('store/productItem.js/actions/fetchProductItem:\n', data)
+        context.commit('SET_PRODUCT_ITEM', data)
       })
       .catch((error) => {
-        console.error('store/product.js/actions/getProduct:\n', error)
+        console.error('store/product.js/actions/fetchProductItem:\n', error)
       })
   },
 }
@@ -83,7 +82,10 @@ export const getters = {
   // 계산된 속성을 반환하는 메소드
   // getStatus(state) { return '{status: ' + state.status + '}' }
   getProduct(state) {
-    console.log('store/product.js actions/getProduct:\n', state.products[0])
+    console.log(
+      'store/productItem.js actions/getProductItem:\n',
+      state.products[0]
+    )
     if (state.products[0] !== undefined && state.products[0] !== null)
       return state.products[0]
     console.log('good')

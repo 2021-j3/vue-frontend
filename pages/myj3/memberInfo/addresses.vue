@@ -1,10 +1,5 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="addresses"
-    sort-by="calories"
-    class="elevation-1"
-  >
+  <v-data-table :headers="headers" :items="addresses" class="elevation-1">
     <template #top>
       <v-toolbar flat>
         <v-toolbar-title>배송지 관리</v-toolbar-title>

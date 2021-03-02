@@ -6,24 +6,24 @@
         <!--카트 아이템 리스트-->
         <v-card color="yellow">
           <v-list>
-            <!--리스트 헤더-->
+            <!--리스트 조작 버튼-->
             <v-list-item>
               <v-list-item-action class="ma-1">
                 <v-btn
                   depressed
-                  :input-value="allNodesSelected"
+                  :input-value="allItemsSelected"
                   @click.stop="toggleCompleteSelection"
                   >전체선택
                 </v-btn>
               </v-list-item-action>
               <v-list-item-action class="ma-1">
-                <v-btn text :disabled="noNodesSelected" @click="deleteNodes">
+                <v-btn text :disabled="noItemsSelected" @click="deleteItems">
                   선택삭제
                 </v-btn>
               </v-list-item-action>
             </v-list-item>
             <!--리스트 아이템-->
-            <v-list-item-group v-model="selectedNodeIds" multiple>
+            <v-list-item-group v-model="selectedList" multiple>
               <v-list-item
                 v-for="cartItem in cart.cart_items"
                 :key="cartItem.cart_item_id"
@@ -46,23 +46,18 @@
                       v-text="cartItem.title"
                     ></v-list-item-title>
                   </v-list-item-content>
-                  <v-list-item-content class="ml-5">
-                    <v-flex xs5>
-                      <v-text-field
-                        v-model="cartItem.quantity"
-                        outlined
-                        hide-details
-                        class="expand ma-0 pa-0"
-                        dense
-                        type="number"
-                        width="1"
-                        min="1"
-                      ></v-text-field>
-                    </v-flex>
-                  </v-list-item-content>
                   <v-spacer />
-                  <v-list-item-action class="ml-5">
-                    {{ cartItem.price }} 원
+                  <v-list-item-action>
+                    <v-row>
+                      <v-col cols="5" offset="4">
+                        <minus-plus
+                          :ref-object="cartItem"
+                          :number="cartItem.quantity"
+                          @update="onChanged"
+                        ></minus-plus>
+                      </v-col>
+                      <v-col cols="3">{{ cartItem.price }} 원</v-col>
+                    </v-row>
                   </v-list-item-action>
                 </template>
               </v-list-item>
@@ -74,16 +69,26 @@
       <v-col cols="3">
         <v-card>
           <v-card color="yellow"> 주소 </v-card>
-          <v-card color="red">
+          <v-card color="red pa-5">
             결제 예정 금액
-            {{ cart.item_price_total }}
-            {{ cart.item_discount }}
-
-            <!-- 장바구니, 구매 -->
             <v-layout justify-space-between>
-              <v-spacer></v-spacer>
-              <v-btn class="ma-1" x-large color="indigo">바로구매</v-btn>
+              <span class="text-left"> 전체금액 </span>
+              <span class="text-right">{{ item_price_total }} 원 </span>
             </v-layout>
+            <v-layout justify-space-between>
+              <span class="text-left"> 할인 금액 </span>
+              <span> -{{ item_discount }} 원 </span>
+            </v-layout>
+            <v-layout justify-space-between>
+              <span class="text-left"> 배송비 </span>
+              <span> +{{ shipping }} 원 </span>
+            </v-layout>
+            <v-layout justify-space-between>
+              <span>적용 금액</span>
+              <span>{{ final_price }} 원</span>
+            </v-layout>
+            <!-- 장바구니, 구매 -->
+            <v-btn color="indigo" class="mt-5" block>결제하기</v-btn>
           </v-card>
         </v-card>
       </v-col>
@@ -96,88 +101,54 @@ export default {
   name: 'Cart',
   // 로그인 불필요
   auth: false,
-  data: () => ({
-    cart: {
-      item_price_total: 0,
-      item_discount: 0,
-      tax: 0, // 보여줄일이 없는디
-      shipping: 0,
-      user_discount: 0,
-      grand_total: 0,
-      first_name: '',
-      last_name: '',
-      phone_number: '',
-      email: '',
-      road_address: '',
-      address: '',
-      city: '',
-      province: '',
-      country: '',
-      zip_code: 0,
-      content: '',
-      cart_items: [
-        {
-          id: 0,
-          cart_item_id: 1,
-          active: true,
-          thumbnailPath: 'https://placeimg.com/50/50/any',
-          title: '상추',
-          quantity: 1,
-          price: 1000,
-        },
-        {
-          id: 1,
-          cart_item_id: 2,
-          active: true,
-          thumbnailPath: 'https://placeimg.com/50/50/any',
-          title: '부리또',
-          quantity: 1,
-          price: 20000,
-        },
-        {
-          id: 2,
-          cart_item_id: 3,
-          active: true,
-          thumbnailPath: 'https://placeimg.com/50/50/any',
-          title: '아스파라거스',
-          quantity: 1,
-          price: 3000,
-        },
-      ],
-    },
-    selectedNodeIds: [],
-  }),
+  data: () => ({}),
   computed: {
-    noNodesSelected() {
-      return this.selectedNodeIds.length === 0
+    cart() {
+      return this.$store.getters['cart/cart']
     },
-    allNodesSelected() {
-      return this.selectedNodeIds.length === this.cart.length
+    selectedList: {
+      get() {
+        return this.$store.getters['cart/selectedCartItems']
+      },
+      set(value) {
+        console.log(value)
+        this.$store.dispatch('cart/setSelectedCartItem', value)
+      },
     },
-  },
-  created() {
-    this.$store.dispatch('cart/fetchCart')
+    noItemsSelected() {
+      return this.$store.getters['cart/noItemsSelected']
+    },
+    allItemsSelected() {
+      return this.$store.getters['cart/allItemsSelected']
+    },
+    item_price_total() {
+      return this.$store.getters['cart/item_price_total']
+    },
+    item_discount() {
+      return this.$store.getters['cart/item_discount']
+    },
+    shipping() {
+      return this.$store.getters['cart/shipping']
+    },
+    final_price() {
+      return this.$store.getters['cart/final_price']
+    },
   },
   methods: {
-    deleteNodes(nodeIds) {
-      for (const nodeId of this.selectedNodeIds) {
-        this.deleteNode(nodeId)
-      }
-      this.selectedQueueIds = []
-    },
-    deleteNode(id) {
-      this.cart = this.cart.filter((cart) => cart.id !== id)
+    deleteItems() {
+      this.$store.dispatch('cart/deleteSelectedCartItems')
     },
     toggleCompleteSelection() {
-      if (this.allNodesSelected) {
-        this.selectedNodeIds = []
-      } else {
-        this.selectedNodeIds = this.cart.map((item) => item.id)
-      }
-      console.log(this.selectedNodeIds)
+      this.$store.dispatch('cart/toggleSelectedCartItems')
+    },
+    onChanged(value, ref) {
+      console.log(value, ref)
+      this.$store.dispatch('cart/setCartItemQuantity', {
+        cartItemId: ref.cart_item_id,
+        quantity: value,
+      })
     },
   },
 }
 </script>
-
 <style scoped></style>
