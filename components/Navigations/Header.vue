@@ -138,18 +138,10 @@ export default {
       selectedCategory: null,
       categoriesMenu: false,
       loggedIn: false,
+      queryString: '',
     }
   },
   computed: {
-    queryString: {
-      get() {
-        return this.$store.getters['products/getQuery']
-      },
-      set(query) {
-        this.$store.dispatch('products/setCondition', { query })
-      },
-    },
-
     categories() {
       return this.$store.getters['categories/getCategoryTree']
     },
@@ -160,7 +152,11 @@ export default {
   },
   methods: {
     searchByQueryString() {
-      this.$store.dispatch('products/findProducts')
+      console.log(
+        'components/header.js | method/searchByQueryString : 검색어=',
+        this.queryString
+      )
+      this.$router.replace('products?query=' + this.queryString)
     },
     logout() {
       this.$store.dispatch('myAuth/logout')
