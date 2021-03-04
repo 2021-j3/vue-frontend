@@ -17,7 +17,9 @@
     "core-js": "^3.8.3",
     "eslint-loader": "^4.0.2",
     "nuxt": "^2.14.12",
-    "nuxt-vuex-localstorage": "^1.2.7"
+    "nuxt-log": "^0.1.0",
+    "nuxt-vuex-localstorage": "^1.2.7",
+    "nuxt-winston-log": "^1.2.0"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^5.0.0",

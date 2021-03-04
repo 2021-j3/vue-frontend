@@ -1,4 +1,6 @@
 import colors from 'vuetify/es5/util/colors'
+import { format, transports } from 'winston'
+const { combine, timestamp, label, prettyPrint } = format
 
 export default {
   // Target: https://go.nuxtjs.dev/config-target
@@ -16,21 +18,18 @@ export default {
       lang: 'en',
     },
     meta: [
-      {charset: 'utf-8'},
-      {name: 'viewport', content: 'width=device-width, initial-scale=1'},
-      {hid: 'description', name: 'description', content: ''},
+      { charset: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { hid: 'description', name: 'description', content: '' },
     ],
-    link: [{rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'}],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    '~/plugins/axios',
-    '~/plugins/apis',
-  ],
+  plugins: ['~/plugins/axios', '~/plugins/apis', "~/plugins/customLogger"],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -76,7 +75,11 @@ export default {
         // auth 관련 api 관리
         endpoints: {
           // data { email, role, token } 이므로 토큰의 경로는 data.token
-          login: { url: '/api/accounts/login', method: 'post', propertyName: 'token' },
+          login: {
+            url: '/api/accounts/login',
+            method: 'post',
+            propertyName: 'token',
+          },
           user: false,
           // user: { url: '/api/accounts/my', method: 'get' },
           logout: false,
@@ -89,7 +92,7 @@ export default {
       //   authFetch: true,
       // }
     },
-    cookie:{
+    cookie: {
       prefix: 'AUTHENTIFICATION',
     },
     watchLoggedIn: true,
@@ -119,25 +122,22 @@ export default {
   router: {
     middleware: ['auth', 'redirection'],
   },
-
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: [
-      'nuxt-vuex-localstorage'
-    ],
+    transpile: ['nuxt-vuex-localstorage'],
     extend(config, ctx) {
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
         config.module.rules.push({
-          enforce: "pre",
+          enforce: 'pre',
           test: /\.(js|vue)$/,
-          loader: "eslint-loader",
+          loader: 'eslint-loader',
           exclude: /(node_modules)/,
           options: {
-            fix: true
-          }
-        });
+            fix: true,
+          },
+        })
       }
-    }
+    },
   },
 }

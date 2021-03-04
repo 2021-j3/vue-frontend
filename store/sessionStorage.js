@@ -1,5 +1,6 @@
 export const state = () => ({
   token: '',
+  local_cart: {},
 })
 
 export const mutations = {

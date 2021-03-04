@@ -81,7 +81,8 @@
                   <v-list-item
                     v-for="(category, i) in categories"
                     :key="i"
-                    :to="'/categories/' + category.id"
+                    :to="category.slug"
+                    replace
                   >
                     <v-list-item-content
                       @mouseover="
@@ -105,7 +106,8 @@
                       <v-list-item
                         v-for="(sub, j) in selectedCategory.sub"
                         :key="j"
-                        :to="'/categories/' + sub.id"
+                        :to="sub.slug"
+                        replace
                       >
                         <v-list-item-title>
                           {{ sub.title }}
@@ -138,18 +140,10 @@ export default {
       selectedCategory: null,
       categoriesMenu: false,
       loggedIn: false,
+      queryString: '',
     }
   },
   computed: {
-    queryString: {
-      get() {
-        return this.$store.getters['products/getQuery']
-      },
-      set(query) {
-        this.$store.dispatch('products/setCondition', { query })
-      },
-    },
-
     categories() {
       return this.$store.getters['categories/getCategoryTree']
     },
@@ -160,7 +154,11 @@ export default {
   },
   methods: {
     searchByQueryString() {
-      this.$store.dispatch('products/findProducts')
+      console.log(
+        'components/header.js | method/searchByQueryString : 검색어=',
+        this.queryString
+      )
+      this.$router.replace('products?query=' + this.queryString)
     },
     logout() {
       this.$store.dispatch('myAuth/logout')

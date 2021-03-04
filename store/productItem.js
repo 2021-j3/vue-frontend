@@ -1,7 +1,7 @@
 // product.vue 에서 사용하는 store
 
 export const state = () => ({
-  products: [],
+  product: {},
   dummyProduct: {
     product_id: null,
     account: null,
@@ -39,6 +39,7 @@ export const state = () => ({
     ],
   },
   selected: {
+    product_id: 0,
     quantity: 1,
   },
   dummyCategoryTree: [
@@ -49,9 +50,9 @@ export const state = () => ({
 
 export const mutations = {
   SET_PRODUCT_ITEM(state, product) {
-    console.log('store/productItem.js/mutations/SET_PRODUCT_ITEM:\n', product)
-    state.products = []
-    state.products.push(product)
+    console.log('store/productItem.js - mutations/SET_PRODUCT_ITEM:\n', product)
+    state.product = product
+    state.selected.product_id = product.product_id
   },
   SET_SELECTED_QUANTITY(state, quantity) {
     state.selected.quantity = quantity
@@ -65,15 +66,15 @@ export const actions = {
    * @param id
    */
   fetchProduct(context, id) {
-    console.log('store/productItem.js/actions/fetchProductItem:\nid is', id)
+    console.log('store/productItem.js - actions/fetchProductItem:\nid is', id)
     this.$apis
       .getProductById(id)
       .then((data) => {
-        console.log('store/productItem.js/actions/fetchProductItem:\n', data)
+        console.log('store/productItem.js - actions/fetchProductItem:\n', data)
         context.commit('SET_PRODUCT_ITEM', data)
       })
       .catch((error) => {
-        console.error('store/product.js/actions/fetchProductItem:\n', error)
+        console.error('store/product.js - actions/fetchProductItem:\n', error)
       })
   },
 }
@@ -83,20 +84,28 @@ export const getters = {
   // getStatus(state) { return '{status: ' + state.status + '}' }
   getProduct(state) {
     console.log(
-      'store/productItem.js actions/getProductItem:\n',
-      state.products[0]
+      'store/productItem.js | actions/getProductItem :',
+      state.product
     )
-    if (state.products[0] !== undefined && state.products[0] !== null)
-      return state.products[0]
+    if (state.product !== undefined && state.product !== null)
+      return state.product
     console.log('good')
     return state.dummyProduct
   },
   getDiscountedPrice(state) {
-    return state.products.price - state.products.discount_price
+    const FUNC_NAME = 'store/productItem.js | actions/getDiscountedPrice :'
+    console.log(
+      FUNC_NAME,
+      '가격',
+      state.product.price,
+      '할인',
+      state.product.discountPrice
+    )
+    return state.product.price - state.product.discount_price
   },
   getTotalPrice(state) {
-    if (state.products[0] !== undefined && state.products[0] !== null)
-      return state.selected.quantity * state.products[0].price
+    if (state.product !== undefined && state.product !== null)
+      return state.selected.quantity * state.product.price
     console.log('good')
     return state.selected.quantity * state.dummyProduct.price
   },

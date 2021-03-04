@@ -32,7 +32,7 @@ export const mutations = {
 export const actions = {
   createAddress(context, item) {
     console.log(item)
-    this.$apis.createAddress(item)n.then((data) => {
+    this.$apis.createAddress(item).then((data) => {
       context.commit('ADD_ADDRESS', item)
     })
   },
@@ -52,7 +52,7 @@ export const actions = {
 
   deleteAddress(context, item) {
     const id = context.state.addresses.indexOf(item).address_id
-    this.$apis.deleteAddress((id)
+    this.$apis.deleteAddress(id)
   },
 }
 

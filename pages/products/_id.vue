@@ -9,10 +9,10 @@
     <v-row>
       <v-col :cols="5" offset="1">
         <v-img
-          v-if="!!product.thumbnailPath"
-          src="https://placeimg.com/150/150/any"
+          v-if="!!product.thumbnail_path"
+          :src="product.thumbnail_path"
         ></v-img>
-        <v-img v-else src="product.thumbnailPath"></v-img>
+        <v-img v-else src="https://placeimg.com/150/150/any"></v-img>
       </v-col>
       <v-col :cols="5">
         <!-- 카테고리, sku -->
@@ -27,12 +27,12 @@
         <!-- 제품 이름 -->
         <h1 class="product-name mt-3">{{ product.title }}</h1>
         <!-- 가격 -->
-        <div v-if="product.discountPrice !== 0" class="mt-4">
-          <span class="product-price display-1">{{ discountedPrice }}</span>
+        <div v-if="product.discount_price !== 0" class="mt-4">
+          <span class="product-price display-1">{{ discountedPrice }} 원</span>
           <span
             class="product-original-price text-decoration-line-through text--disabled"
           >
-            {{ product.price }}원
+            {{ product.price }} 원
           </span>
         </div>
         <div v-else class="mt-4">
@@ -63,6 +63,11 @@
       </v-col>
       <v-col :cols="1"></v-col>
     </v-row>
+    <v-row>
+      <v-col cols="10" offset="1">
+        <v-img :src="product.image_path"></v-img>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -73,6 +78,10 @@ export default {
   auth: false,
   computed: {
     product() {
+      console.log(
+        'pages/product-item.vue | computed/product/get() : 현재 상품=',
+        this.$store.getters['productItem/getProduct']
+      )
       return this.$store.getters['productItem/getProduct']
     },
     discountedPrice() {

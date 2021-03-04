@@ -12,19 +12,18 @@
           </v-btn-toggle>
         </v-layout>
         <v-layout row>
-          <v-flex d-flex>
-            <ProductCard
-              v-for="item in products"
-              :key="item.product_id"
-              :title="item.title"
-              :content="item.content"
-              :slug="item.slug"
-              :thumbnail-path="item.thumbnailPath"
-              :price="item.price"
-              class="pa-2"
-              col="6"
-            ></ProductCard>
-          </v-flex>
+          <ProductCard
+            v-for="item in products"
+            :key="item.product_id"
+            :title="item.title"
+            :content="item.content"
+            :slug="item.slug"
+            :thumbnail-path="item.thumbnail_path"
+            :price="item.price"
+            :discount-price="item.discount_price"
+            class="pa-2"
+            col="2"
+          ></ProductCard>
         </v-layout>
         <v-row justify="center">
           <v-col cols="10">
@@ -54,10 +53,7 @@ export default {
   computed: {
     products() {
       const items = this.$store.getters['products/getProducts']
-      console.log(
-        'pages/products/index.vue computed/products:\n현재페이지 프로덕트:',
-        items
-      )
+      console.log('products.vue | products.get():\n제품:', items)
       return items
     },
     orderBy: {
@@ -83,7 +79,7 @@ export default {
     },
     lastPage() {
       console.log(
-        '마지막 페이지는 :',
+        'products.vue | computed/lastPage/get() : 마지막 페이지는=',
         this.$store.getters['products/getLastPage']
       )
       const lastPageNum = this.$store.getters['products/getLastPage']
@@ -91,40 +87,29 @@ export default {
     },
   },
   watch: {
-    '$route.query': {
-      handler(oldUrl, newUrl) {
-        this.$store.dispatch('products/findProducts', {
-          query: this.$route.query.query,
-          minPrice: this.$route.query.minPrice,
-          maxPrice: this.$route.query.maxPrice,
-          categories: this.$route.query.categories,
-          tags: this.$route.query.tags,
-          page: this.$route.query.page,
-          size: this.$route.query.size,
-          order: this.$route.query.order,
-          by: this.$route.query.by,
-        })
-      },
+    $route(to, from) {
+      console.log('products.vue | updated : 쿼리=', to.query)
+      this.setAllConditions()
     },
   },
   created() {
-    console.log(
-      'pages/products / index.vue/created:\n 프로덕트 뷰 생성됨 쿼리=',
-      this.$route.query
-    )
-    this.$store.dispatch('products/findProducts', {
-      query: this.$route.query.query,
-      minPrice: this.$route.query.minPrice,
-      maxPrice: this.$route.query.maxPrice,
-      categories: this.$route.query.categories,
-      tags: this.$route.query.tags,
-      page: this.$route.query.page,
-      size: this.$route.query.size,
-      order: this.$route.query.order,
-      by: this.$route.query.by,
-    })
+    console.log('products.vue | created : 쿼리=', this.$route.query)
+    this.setAllConditions()
   },
   methods: {
+    setAllConditions() {
+      this.$store.dispatch('products/setCondition', {
+        query: this.$route.query.query,
+        minPrice: this.$route.query.minPrice,
+        maxPrice: this.$route.query.maxPrice,
+        categories: this.$route.query.categories,
+        tags: this.$route.query.tags,
+        page: this.$route.query.page,
+        size: this.$route.query.size,
+        order: this.$route.query.order,
+        by: this.$route.query.by,
+      })
+    },
     updateMinPrice(minPrice) {
       this.$store.dispatch('products/updateCondition', { minPrice })
     },
