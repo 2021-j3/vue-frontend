@@ -125,9 +125,17 @@ export const actions = {
       updatedFilter[k] =
         arguments[1][k] === undefined ? state.currentFilter[k] : arguments[1][k]
     })
-    console.log('새로운 필터', updatedFilter)
     commit('__CLEAR_PRODUCTS')
-    this.$router.push({ name: 'products', query: updatedFilter })
+    console.log(
+      'store/product.js | actions/updateCondition : 추가적인 필터를 적용함',
+      updatedFilter,
+      '현재 페이지',
+      this.$router.currentRoute
+    )
+    this.$router.push({
+      path: this.$router.currentRoute.path,
+      query: updatedFilter,
+    })
   },
   /**
    * 상품을 검색한다
@@ -192,7 +200,6 @@ export const actions = {
       }
     })
       .then((bulkData) => {
-        console.log('eeeeeeeee', bulkData)
         context.commit('__SET_CURRENT_PAGE', {
           items: bulkData.contents.filter(
             (item, index) =>

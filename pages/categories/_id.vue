@@ -2,7 +2,7 @@
   <div class="category_item mt-4">
     <v-row>
       <v-col cols="10" offset="1">
-        <v-breadcrumbs :items="categoryTree" divider="-"></v-breadcrumbs>
+        <v-breadcrumbs :items="categories" divider="-"></v-breadcrumbs>
       </v-col>
     </v-row>
     <products />

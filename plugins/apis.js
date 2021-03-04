@@ -12,23 +12,19 @@ export default function ({ $axios, redirect, store }, inject) {
   // request 를 처리하는 interceptors
   api.interceptors.request.use(
     (request) => {
+      const FUNC_NAME = 'plugins/apis | api/request-onFullFilled : '
       // 로그인  여부 확인
       if (store.$auth.loggedIn) {
         // auth token 추가
         request.headers.common.Authorization =
           store.getters['myAuth/getAuthorization']
       }
-      console.log(
-        'plugins/axios.js onRequest:\naxios 리퀘스트 인터셉트 내용',
-        request
-      )
+      console.log(FUNC_NAME, '리퀘스트 내용=', request)
       return request
     },
     (error) => {
-      console.error(
-        'plugins/axios.js/onRequestError:\naxios 리퀘스트 에러 내용',
-        error
-      )
+      const FUNC_NAME = 'plugins/apis | api/request-onRejected : '
+      console.error(FUNC_NAME, '리퀘스트 에러 내용=', error)
       return Promise.reject(error)
     }
   )
@@ -36,13 +32,14 @@ export default function ({ $axios, redirect, store }, inject) {
   // response 를 처리하는 interceptors
   api.interceptors.response.use(
     (response) => {
-      console.log('plugins/axios.js onResponse:\n', response)
+      const FUNC_NAME = 'plugins/apis | api/request-onFullFilled : '
+      console.log(FUNC_NAME, '리스폰스 내용=', response)
       // 실제 데이터는 response.response.data.data 에 들어있음
       return new Promise((resolve) => resolve(response.data))
     },
     (error) => {
-      console.log('plugins/axios.js onResponseError:\n', error)
-      console.log(error.data)
+      const FUNC_NAME = 'plugins/apis | api/request-onRejected : '
+      console.log(FUNC_NAME, '리스폰스 에러 내용=', error, error.data)
       // redirect('/errors/' + error.response.status)
       return Promise.reject(error)
     }
@@ -118,9 +115,21 @@ export default function ({ $axios, redirect, store }, inject) {
    * @returns { Promise } 서버에서 가져온 카트
    */
   const getMyCart = function () {
+    console.log(
+      'plugins/apis.js | getMyCart : "FIXME:cart는 현재 bodydata타입입니다"'
+    )
     return new Promise((resolve, reject) => {
       api
         .get('/cart/my')
+        .then((data) => resolve(data.data))
+        .then((data) => resolve(data))
+        .catch((error) => reject(error))
+    })
+  }
+  const getAllCategories = function () {
+    return new Promise((resolve, reject) => {
+      api
+        .get('/categories')
         .then((data) => resolve(data))
         .catch((error) => reject(error))
     })
@@ -156,35 +165,16 @@ export default function ({ $axios, redirect, store }, inject) {
    * @Param pagination.by          { ('ASC'|'DES')='ASC' } 정렬 방향
    */
   const getProductByQuery = function (query, pagination) {
-    // const bulkSize = 10
-    // const bulkLoadPagination = {
-    //   page: parseInt((pagination.page - 1) / bulkSize) * bulkSize + 1,
-    //   size: pagination.size * bulkSize,
-    //   order: pagination.order,
-    //   by: pagination.by,
-    // }
-    // if (lastPagination === bulkLoadPagination) {
-    //   console.log('이미 가지고 있으므로 바로 돌려줍니다.', cachedProducts)
-    //   return Promise.resolve(returnPageData(pagination))
-    // }
     console.log(
       '캐시에 해당 데이터가 없습니다. 새로 받아옵니다, api 파라미터',
       arguments
     )
     return new Promise((resolve, reject) => {
       const queryParam = getRequestParam({ ...query, ...pagination })
-      api
-        .get('/products?' + queryParam)
-        .then((data) => {
-          cachedProducts = Object.assign({ ...data })
-          resolve(cachedProducts)
-          // resolve(returnPageData(pagination))
-        })
-        .finally(() => {
-          // lastQuery = query
-          // lastPagination = pagination
-          // console.log(lastQuery, lastPagination)
-        })
+      api.get('/products?' + queryParam).then((data) => {
+        cachedProducts = Object.assign({ ...data })
+        resolve(cachedProducts)
+      })
     })
   }
   /**
@@ -214,10 +204,11 @@ export default function ({ $axios, redirect, store }, inject) {
 
   const apis = {
     createAddress,
-    getMyCart,
     getMyAddresses,
     updateMyAddresses,
     deleteAddress,
+    getMyCart,
+    getAllCategories,
     getProductById,
     getProductByQuery,
   }

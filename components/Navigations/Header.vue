@@ -81,7 +81,8 @@
                   <v-list-item
                     v-for="(category, i) in categories"
                     :key="i"
-                    :to="'/categories/' + category.id"
+                    :to="category.slug"
+                    replace
                   >
                     <v-list-item-content
                       @mouseover="
@@ -105,7 +106,8 @@
                       <v-list-item
                         v-for="(sub, j) in selectedCategory.sub"
                         :key="j"
-                        :to="'/categories/' + sub.id"
+                        :to="sub.slug"
+                        replace
                       >
                         <v-list-item-title>
                           {{ sub.title }}

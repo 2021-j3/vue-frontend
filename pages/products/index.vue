@@ -18,8 +18,9 @@
             :title="item.title"
             :content="item.content"
             :slug="item.slug"
-            :thumbnail-path="item.thumbnailPath"
+            :thumbnail-path="item.thumbnail_path"
             :price="item.price"
+            :discount-price="item.discount_price"
             class="pa-2"
             col="2"
           ></ProductCard>

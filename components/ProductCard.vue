@@ -1,20 +1,19 @@
 <template>
   <div class="product-card">
-    <v-card class="mx-auto-my-12" :href="slugValue">
-      <v-img height="150" width="150" :src="thumbnailPathValue"></v-img>
-      <v-card-title>{{ titleValue }}</v-card-title>
-      <v-card-text>
-        <div>
-          {{ contentValue }}
-        </div>
-        <div v-if="discountPrice !== 0">{{ priceValue }} 원</div>
-        <div>
-          <span class="product-price display-1">{{ priceValue }}</span>
-          <span
-            class="product-original-price text-decoration-line-through text--disabled"
-          >
-            {{ originalPriceValue }}원
-          </span>
+    <v-card class="mx-auto-my-12" :to="this.$props.slug">
+      <v-img height="150" width="150" :src="this.$props.thumbnailPath"></v-img>
+      <v-card-title class="py-1">{{ this.$props.title }}</v-card-title>
+      <v-card-text class="pb-2">
+        <div v-if="discountPrice !== 0" class="product-price">
+          <p class="mb-1">
+            - {{ discountPercent }} %
+            <span
+              class="product-original-price text-decoration-line-through text--disabled"
+            >
+              {{ this.$props.price }}원
+            </span>
+          </p>
+          <h2 class="product-price">{{ priceAfterDiscount }}원</h2>
         </div>
       </v-card-text>
     </v-card>
@@ -32,23 +31,16 @@ export default {
     price: { type: Number, default: 0 },
     discountPrice: { type: Number, default: 0 },
   },
-  data() {
-    return {
-      slugValue: '',
-      thumbnailPathValue: 'https://placeimg.com/150/150/any',
-      titleValue: 'title',
-      contentValue: 'content',
-      priceValue: 0,
-      originalPriceValue: 0,
-    }
+  computed: {
+    discountPercent() {
+      return parseInt((this.$props.discountPrice / this.$props.price) * 100)
+    },
+    priceAfterDiscount() {
+      return this.$props.price - this.$props.discountPrice
+    },
   },
   created() {
-    this.$data.slugValue = this.slug
-    this.$data.thumbnailPatValueh = this.thumbnailPath
-    this.$data.titleValue = this.title
-    this.$data.contentValue = this.content
-    this.$data.priceValue = this.price - this.discountPrice
-    this.$data.originalPriceValue = this.price
+    console.log(this.$props)
   },
 }
 </script>

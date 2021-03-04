@@ -68,9 +68,12 @@
       </v-col>
       <v-col cols="3">
         <v-card>
-          <v-card color="yellow"> 주소 </v-card>
+          <v-card color="yellow pa-5">
+            <v-card-title>배송지</v-card-title>
+            <v-card-text>{{ shippingAddress }}</v-card-text>
+          </v-card>
           <v-card color="red pa-5">
-            결제 예정 금액
+            <v-card-title>결제 예정 금액</v-card-title>
             <v-layout justify-space-between>
               <span class="text-left"> 전체금액 </span>
               <span class="text-right">{{ item_price_total }} 원 </span>
@@ -133,6 +136,12 @@ export default {
     final_price() {
       return this.$store.getters['cart/final_price']
     },
+    shippingAddress(state) {
+      return this.$store.getters['cart/shippingAddress']
+    },
+  },
+  created() {
+    this.$store.dispatch('cart/fetchCart')
   },
   methods: {
     deleteItems() {

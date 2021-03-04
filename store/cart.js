@@ -71,15 +71,13 @@ export const state = () => ({
 })
 
 export const mutations = {
-  // setCategoryList(state, CategoryList) {
-  //   console.log(
-  //     'store/CategoryList.js/mutations/setCategoryListList:\n',
-  //     CategoryList
-  //   )
   SET_CART(state, cart) {
     // state.cart = cart
-    console.log('DUMMY SET_CART of cart.js')
-    state.cart = Object.assign({ ...state.dummyCart })
+    const FUNC_NAME = 'store/cart.js | mutations/SET_CART : '
+    console.log(FUNC_NAME, '새로운 카트의 내용은=', cart)
+    // state.cart = Object.assign({ ...state.dummyCart })
+    if (cart === null) return
+    state.cart = cart
     state.local_calculation.item_price_total = state.cart.item_price_total
     state.local_calculation.item_discount = state.cart.item_discount
     state.local_calculation.shipping = state.cart.shipping
@@ -100,9 +98,16 @@ export const mutations = {
     state.selected_cart_items = Object.assign({ ...[] })
   },
   TOGGLE_SELECTED_CART_ITEMS(state) {
+    const FUNC_NAME = 'store/cart.js | mutations/TOGGLE_SELECTED_CART_ITEMS : '
+    console.log(FUNC_NAME, '선택된 카트 아이템은=', state.selected_cart_items)
     if (state.selected_cart_items.length !== 0)
       state.selected_cart_items = Object.assign({ ...[] })
     else {
+      console.log(
+        FUNC_NAME,
+        '카트 아이템즈의 타입은=',
+        typeof state.cart.cart_items
+      )
       state.selected_cart_items = state.cart.cart_items.map(
         (item) => item.cart_item_id
       )
@@ -134,8 +139,7 @@ export const actions = {
     }
   },
 
-  fetchCartFromServer(context, id) {
-    console.log('store/cart.js actions/fetchCartFromServer:\nid is', id)
+  fetchCartFromServer(context) {
     this.$apis
       .getMyCart()
       .then((data) => {
@@ -195,5 +199,11 @@ export const getters = {
       state.local_calculation.item_price_total -
       state.local_calculation.item_discount
     )
+  },
+  shippingAddress(state) {
+    console.log(
+      'store/cart.js | getters/shippingAddress : TODO: 주소필드를 조합하여 하나의 주소로 만들어서 돌려줘야 합니다'
+    )
+    return state.cart.road_address
   },
 }
