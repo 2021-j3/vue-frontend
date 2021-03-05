@@ -19,7 +19,8 @@ export default {
       // const array = new Uint32Array(10)
       // this.$store.commit('myAuth/SET_TOKEN_NAME', this.window.crypto)
       console.log('click login')
-      this.$store.dispatch('myAuth/login', value)
+      // this.$store.dispatch('myAuth/login', value)
+      this.$store.dispatch('token/login', value)
     },
   },
 }

@@ -15,7 +15,7 @@ export default function ({ $axios, redirect, store }, inject) {
       if (store.$auth.loggedIn) {
         // auth token 추가
         request.headers.common.Authorization =
-          store.getters['myAuth/getAuthorization']
+          store.getters['token/getAuthorization']
         console.log('plugins/axios.js onRequest:\nCalled with Authorization')
       }
       console.log('plugins/axios.js onRequest:\n', request)

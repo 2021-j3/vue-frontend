@@ -1,6 +1,4 @@
 import colors from 'vuetify/es5/util/colors'
-import { format, transports } from 'winston'
-const { combine, timestamp, label, prettyPrint } = format
 
 export default {
   // Target: https://go.nuxtjs.dev/config-target
@@ -29,7 +27,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['~/plugins/axios', '~/plugins/apis', "~/plugins/customLogger"],
+  plugins: ['~/plugins/axios', '~/plugins/apis'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -48,7 +46,12 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     '@nuxtjs/auth',
-    'nuxt-vuex-localstorage',
+    [
+      'nuxt-vuex-localstorage',
+      {
+        sessionStorage: ['token', 'localCart'],
+      },
+    ],
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

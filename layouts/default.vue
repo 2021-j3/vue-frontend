@@ -33,7 +33,7 @@ export default {
   },
 
   created() {
-    this.$store.dispatch('cart/fetchCartFromServer', 0)
+    this.$store.dispatch('cart/fetchCart', 0)
     console.log(
       'default.vue created:\n ' + 'cart/fetchCart currently DOES NOT CALLED'
     )

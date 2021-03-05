@@ -1,6 +1,6 @@
 <template>
   <div class="search_bar">
-    <v-card height="120" color="green">
+    <v-card color="green">
       <!--타이틀, 검색, 아이콘 버튼-->
       <v-row>
         <v-col cols="1" offset="1">
@@ -27,9 +27,17 @@
         </v-col>
         <v-col cols="4">
           <!--회원정보 버튼-->
-          <v-layout v-if="loggedIn" justify-end>
-            <v-btn text @click.prevent="logout">로그아웃</v-btn>
-            <v-btn text :to="{ path: '/myj3/memberInfo' }">회원정보</v-btn>
+          <v-layout justify-end>
+            <v-btn v-if="loggedIn" text @click.prevent="logout">로그아웃</v-btn>
+            <v-btn v-if="loggedIn" text :to="{ path: '/myj3/memberInfo' }"
+              >회원정보</v-btn
+            >
+            <v-btn v-if="!loggedIn" text :to="{ path: '/auth/login' }"
+              >로그인</v-btn
+            >
+            <v-btn v-if="!loggedIn" text :to="{ path: '/auth/register' }"
+              >회원가입</v-btn
+            >
             <!--카트에 아이템이 있는 경우-->
             <v-btn v-if="numberOfCartItems !== 0" text :to="{ path: '/cart' }">
               <v-badge color="pink" :content="numberOfCartItems">
@@ -39,10 +47,8 @@
             <!--카트에 아이템이 없는 경우-->
             <v-btn v-else text :to="{ path: '/cart' }"> 장바구니 </v-btn>
           </v-layout>
-          <v-layout v-else justify-end>
-            <v-btn text :to="{ path: '/auth/login' }">로그인</v-btn>
-            <v-btn text :to="{ path: '/auth/register' }">회원가입</v-btn>
-          </v-layout>
+          <!--          <v-layout v-else justify-end>-->
+          <!--            </v-layout>-->
         </v-col>
       </v-row>
       <!--툴바-->
@@ -161,7 +167,8 @@ export default {
       this.$router.replace('products?query=' + this.queryString)
     },
     logout() {
-      this.$store.dispatch('myAuth/logout')
+      // this.$store.dispatch('myAuth/logout')
+      this.$store.dispatch('token/logout')
     },
   },
 }
