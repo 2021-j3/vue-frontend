@@ -1,10 +1,17 @@
 // account
 
 export const state = () => ({
-  // 상태를 표현하는 변수
+  login_info: {
+    username: '',
+    token: '',
+  },
 })
 
-export const mutations = {}
+export const mutations = {
+  SET_LOGIN_INFO(state, value) {
+    state.login_info = value
+  },
+}
 
 export const actions = {
   /**
@@ -17,9 +24,9 @@ export const actions = {
       .loginWith('local', { data: form })
       .then((response) => response.data)
       .then((data) => {
-        console.log('store/myAuth.js actions/login:', data)
+        console.log('store/token.js | actions/login:', data)
         this.$router.push('/')
-        context.commit('SET_TOKEN', data.token, { root: true })
+        context.commit('SET_LOGIN_INFO', data)
       })
   },
   /**
@@ -29,14 +36,15 @@ export const actions = {
   logout(context) {
     this.$auth.logout()
     this.$router.push('/')
-    context.commit('SET_TOKEN', '', { root: true })
+    context.commit('SET_LOGIN_INFO', {})
   },
 }
 
 export const getters = {
   getAuthorization(state, getters, rootState, rootGetters) {
-    const token = rootGetters['sessionStorage/token']
-    console.log(token)
-    return 'Bearer ' + token
+    return 'Bearer ' + state.login_info.token
+  },
+  getEmail(state) {
+    return state.login_info.username
   },
 }

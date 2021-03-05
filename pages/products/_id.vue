@@ -57,7 +57,9 @@
         <!-- 장바구니, 구매 -->
         <v-layout justify-space-between>
           <v-spacer></v-spacer>
-          <v-btn class="ma-1" x-large outlined>장바구니</v-btn>
+          <v-btn class="ma-1" x-large outlined @click="addItemToCart"
+            >장바구니</v-btn
+          >
           <v-btn class="ma-1" x-large color="indigo">바로구매</v-btn>
         </v-layout>
       </v-col>
@@ -110,6 +112,9 @@ export default {
   methods: {
     onQuantityChanged(value) {
       this.$store.commit('productItem/SET_SELECTED_QUANTITY', value)
+    },
+    addItemToCart() {
+      this.$store.dispatch('productItem/addToCart')
     },
   },
 }

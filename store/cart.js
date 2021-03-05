@@ -1,50 +1,6 @@
 // cart
 
 export const state = () => ({
-  dummyCart: {
-    cart_id: 0,
-    session_id: 0,
-    token: '',
-    account: {
-      // ... account
-    },
-    cart_items: [
-      {
-        title: 'dummy1',
-        cart_item_id: 0,
-        product_id: 1,
-        cart_id: 1,
-        thumbnailPath: '',
-        sku: 0,
-        price: 1502,
-        discount_price: 200,
-        quantity: 1,
-        active: 1,
-        content: '',
-      },
-      {
-        title: 'dummy2',
-        cart_item_id: 4,
-        product_id: 2,
-        cart_id: 1,
-        thumbnailPath: '',
-        sku: 0,
-        price: 2500,
-        discount_price: 500,
-        quantity: 1,
-        active: 1,
-        content: '',
-      },
-    ],
-    status: '',
-    item_price_total: 0,
-    item_discount: 0,
-    tax: 0,
-    shipping: 0,
-    user_discount: 0,
-    grand_total: 0,
-    road_address: '',
-  },
   cart: {
     cart_id: 0,
     session_id: 0,
@@ -95,13 +51,12 @@ export const mutations = {
     state.cart.cart_items = state.cart.cart_items.filter(
       (item, index) => !(index in state.selected_cart_items)
     )
-    state.selected_cart_items = Object.assign({ ...[] })
+    state.selected_cart_items = []
   },
   TOGGLE_SELECTED_CART_ITEMS(state) {
     const FUNC_NAME = 'store/cart.js | mutations/TOGGLE_SELECTED_CART_ITEMS : '
     console.log(FUNC_NAME, '선택된 카트 아이템은=', state.selected_cart_items)
-    if (state.selected_cart_items.length !== 0)
-      state.selected_cart_items = Object.assign({ ...[] })
+    if (state.selected_cart_items.length !== 0) state.selected_cart_items = []
     else {
       console.log(
         FUNC_NAME,
@@ -125,31 +80,50 @@ export const mutations = {
         item.discount_price * item.quantity
       return null
     })
+
+    console.log(
+      'store/cart.js | mutations/CALCULATE_PRICES : 로컬에서 계산됨=',
+      JSON.stringify(state.local_calculation)
+    )
+  },
+  ADD_ITEM_TO_CART(state, item) {
+    state.cart.cart_items.push(item)
   },
 }
 
 export const actions = {
   fetchCart(context) {
     console.log(
-      'store/cart.js actions/fetchCartFromServer:\nloggined:',
+      'store/cart.js actions/fetchCart:\nloggined:',
       this.$auth.loggedIn
     )
     if (this.$auth.loggedIn) {
-      context.dispatch('fetchCartFromServer')
+      context.dispatch('__fetchCartFromServer')
+    } else {
+      context.dispatch('__fetchLocalCart')
     }
   },
 
-  fetchCartFromServer(context) {
+  __fetchCartFromServer(context) {
     this.$apis
       .getMyCart()
       .then((data) => {
         console.log('store/cart.js actions/getCart:\n', data)
         context.commit('SET_CART', data)
-        context.commit('TOGGLE_SELECTED_CART_ITEMS', data)
+        context.commit('TOGGLE_SELECTED_CART_ITEMS')
       })
       .catch((error) => {
         console.error('store/cart.js actions/getCart:\n', error)
       })
+  },
+  __fetchLocalCart(context) {
+    const localCart = context.rootGetters['localCart/localCart']
+    console.log(
+      'store/cart.js | actions/__fetchLocalCart : 로컬 카트 불러옴=',
+      localCart
+    )
+    context.commit('SET_CART', localCart)
+    context.commit('TOGGLE_SELECTED_CART_ITEMS')
   },
   setCartItemQuantity(context, { cartItemId, quantity }) {
     context.commit('SET_CART_ITEM_QUANTITY', { cartItemId, quantity })
@@ -160,17 +134,49 @@ export const actions = {
     context.commit('CALCULATE_PRICES')
   },
   deleteSelectedCartItems(context) {
-    context.commit('DELETE_SELECTED_CART_ITEMS')
-    context.commit('CALCULATE_PRICES')
+    if (!this.$auth.loggedIn) {
+      context
+        .dispatch(
+          'localCart/deleteSelectedCartItems',
+          context.state.selected_cart_items,
+          { root: true }
+        )
+        .then(() => {
+          context.commit('CALCULATE_PRICES')
+        })
+    } else {
+      context.commit('DELETE_SELECTED_CART_ITEMS')
+      context.commit('CALCULATE_PRICES')
+    }
   },
   toggleSelectedCartItems(context) {
     context.commit('TOGGLE_SELECTED_CART_ITEMS')
     context.commit('CALCULATE_PRICES')
   },
+  /**
+   * 카트에 상뭎믕 담는다
+   * @param context
+   * @param item { Object }
+   * @Param item.product_id { Number }
+   * @Param item.title { String }
+   * @Param item.thumbnail_path { String }
+   * @Param item.price { Number }
+   * @Param item.discount_price { Number }
+   * @Param item.quantity { Number }
+   * * */
+  addItemToCart({ dispatch, commit }, item) {
+    if (!this.$auth.loggedIn) {
+      console.log('store/cart.js | actions/addItemToCart : 로컬 카트에 추가함')
+      dispatch('localCart/addToCart', item, {
+        root: true,
+      })
+    }
+  },
 }
 
 export const getters = {
   cart(state) {
+    console.log('store/cart.js | getters/cart : 현재카트=', state.cart)
     return state.cart
   },
   numberOfCartItems(state) {

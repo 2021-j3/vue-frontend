@@ -1,7 +1,6 @@
 // product.vue 에서 사용하는 store
 
 export const state = () => ({
-  product: {},
   dummyProduct: {
     product_id: null,
     account: null,
@@ -38,8 +37,8 @@ export const state = () => ({
       },
     ],
   },
-  selected: {
-    product_id: 0,
+  selectedItem: {
+    product: {},
     quantity: 1,
   },
   dummyCategoryTree: [
@@ -51,11 +50,11 @@ export const state = () => ({
 export const mutations = {
   SET_PRODUCT_ITEM(state, product) {
     console.log('store/productItem.js - mutations/SET_PRODUCT_ITEM:\n', product)
-    state.product = product
-    state.selected.product_id = product.product_id
+    state.selectedItem.product = product
+    state.selectedItem.quantity = 1
   },
   SET_SELECTED_QUANTITY(state, quantity) {
-    state.selected.quantity = quantity
+    state.selectedItem.quantity = quantity
   },
 }
 
@@ -77,6 +76,18 @@ export const actions = {
         console.error('store/product.js - actions/fetchProductItem:\n', error)
       })
   },
+  /**
+   * 현재 상품을 카트에 넣습니다
+   * @param context
+   */
+  addToCart(context) {
+    const item = context.state.selectedItem
+    console.log(
+      'store/productItem.js | actions/addToCart : 상품을 장바구니에 추가합니다=',
+      item
+    )
+    context.dispatch('cart/addItemToCart', item, { root: true })
+  },
 }
 
 export const getters = {
@@ -85,10 +96,13 @@ export const getters = {
   getProduct(state) {
     console.log(
       'store/productItem.js | actions/getProductItem :',
-      state.product
+      state.selectedItem.product
     )
-    if (state.product !== undefined && state.product !== null)
-      return state.product
+    if (
+      state.selectedItem.product !== undefined &&
+      state.selectedItem.product !== null
+    )
+      return state.selectedItem.product
     console.log('good')
     return state.dummyProduct
   },
@@ -97,20 +111,26 @@ export const getters = {
     console.log(
       FUNC_NAME,
       '가격',
-      state.product.price,
+      state.selectedItem.product.price,
       '할인',
-      state.product.discountPrice
+      state.selectedItem.product.discountPrice
     )
-    return state.product.price - state.product.discount_price
+    return (
+      state.selectedItem.product.price -
+      state.selectedItem.product.discount_price
+    )
   },
   getTotalPrice(state) {
-    if (state.product !== undefined && state.product !== null)
-      return state.selected.quantity * state.product.price
+    if (
+      state.selectedItem.product !== undefined &&
+      state.selectedItem.product !== null
+    )
+      return state.selectedItem.quantity * state.selectedItem.product.price
     console.log('good')
-    return state.selected.quantity * state.dummyProduct.price
+    return state.selectedItem.quantity * state.dummyProduct.price
   },
   getSelectedQuantity(state) {
-    return state.selected.quantity
+    return state.selectedItem.quantity
   },
   getCategoryTree(state) {
     return state.dummyCategoryTree.map((v) => {

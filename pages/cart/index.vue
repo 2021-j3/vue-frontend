@@ -42,9 +42,9 @@
                     ></v-img>
                   </v-list-item-icon>
                   <v-list-item-content class="ml-5">
-                    <v-list-item-title
-                      v-text="cartItem.title"
-                    ></v-list-item-title>
+                    <v-list-item-title v-text="cartItem.title">{{
+                      cartItem.title
+                    }}</v-list-item-title>
                   </v-list-item-content>
                   <v-spacer />
                   <v-list-item-action>
