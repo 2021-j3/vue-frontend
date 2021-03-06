@@ -28,7 +28,7 @@
         <h1 class="product-name mt-3">{{ product.title }}</h1>
         <!-- 가격 -->
         <div v-if="product.discount_price !== 0" class="mt-4">
-          <span class="product-price display-1">{{ discountedPrice }} 원</span>
+          <span class="product-price display-1">{{ finalPrice }} 원</span>
           <span
             class="product-original-price text-decoration-line-through text--disabled"
           >
@@ -43,16 +43,15 @@
           {{ product.content }}
         </div>
         <!-- 선택지 -->
-        <v-layout class="options mt-4" justify-end>
-          <v-row>
-            <v-col cols="5" offset="4">
-              <minus-plus
-                :number="selectedQuantity"
-                @update="onQuantityChanged"
-              ></minus-plus>
-            </v-col>
-            <v-col cols="3">{{ totalPrice }} 원</v-col>
-          </v-row>
+        <v-layout row class="options mt-4">
+          <v-flex col shrink>
+            <minus-plus
+              :number="selectedQuantity"
+              @update="onQuantityChanged"
+            ></minus-plus>
+          </v-flex>
+          <v-spacer />
+          <v-flex col text-right>결제금액 {{ totalPrice }} 원</v-flex>
         </v-layout>
         <!-- 장바구니, 구매 -->
         <v-layout justify-space-between>
@@ -86,8 +85,8 @@ export default {
       )
       return this.$store.getters['productItem/getProduct']
     },
-    discountedPrice() {
-      return this.$store.getters['productItem/getDiscountedPrice']
+    finalPrice() {
+      return this.$store.getters['productItem/getFinalPrice']
     },
     totalPrice() {
       return this.$store.getters['productItem/getTotalPrice']

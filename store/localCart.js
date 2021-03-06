@@ -22,7 +22,7 @@ export const state = () => {
 
 export const mutations = {
   DELETE_SELECTED_LOCAL_CART_ITEMS(state, selectedCartItems) {
-    state.localCart.cart_items = state.cart.cart_items.filter(
+    state.localCart.cart_items = state.localCart.cart_items.filter(
       (item, index) => !(index in selectedCartItems)
     )
     console.log(
@@ -32,7 +32,7 @@ export const mutations = {
     )
   },
   ADD_ITEM_TO_LOCAL_CART(state, item) {
-    state.cart.cart_items.push(item)
+    state.localCart.cart_items.push(item)
     console.log(
       'store/localCart.js | mutations/ADD_ITEM_TO_LOCAL_CART',
       '로컬 카트에 아이템 추가됨=',
@@ -44,12 +44,13 @@ export const mutations = {
 export const actions = {
   addToCart(context, cartItem) {
     // 상품이 아직 서버에 등록되지 않았음을 음수로 표시했습니다
-    console.warn(
-      'store/localCart.js | actions/addToCart "TODO: 서버에 아직 등록되지 않은 아이템은 id가 음수입니다 이를 사용하여 서버에 등록하고 삭제하는 기능을 구현해야 합니다"'
-    )
     cartItem.cart_item_id = parseInt(Math.random() * 10000) * -1
+    console.warn(
+      'store/localCart.js | actions/addToCart "TODO: 서버에 아직 등록되지 않은 아이템은 id가 음수입니다 이를 사용하여 서버에 등록하고 삭제하는 기능을 구현해야 합니다"',
+      cartItem
+    )
     context.commit('ADD_ITEM_TO_LOCAL_CART', cartItem)
-    context.commit('cart/ADD_ITEM_TO_CART', cartItem, { root: true })
+    // context.commit('cart/ADD_ITEM_TO_CART', cartItem, { root: true })
   },
   deleteSelectedCartItems(context, selectedCartItems) {
     return new Promise((resolve) => {

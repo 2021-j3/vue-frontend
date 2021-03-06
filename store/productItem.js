@@ -108,7 +108,7 @@ export const getters = {
       return state.selectedItem.product
     return state.dummyProduct
   },
-  getDiscountedPrice(state) {
+  getFinalPrice(state) {
     const FUNC_NAME = 'store/productItem.js | actions/getDiscountedPrice :'
     console.log(
       FUNC_NAME,
@@ -122,12 +122,15 @@ export const getters = {
       state.selectedItem.product.discount_price
     )
   },
-  getTotalPrice(state) {
+  getTotalPrice(state, getters) {
     if (
       state.selectedItem.product !== undefined &&
       state.selectedItem.product !== null
     )
-      return state.selectedItem.quantity * state.selectedItem.product.price
+      return state.selectedItem.quantity * getters.getFinalPrice
+    console.warn(
+      'store/productItems | getters/getTotalPrice : TODO: 인터넷 연결이 끊어졌습니다 페이지를 생성해야 합니다 '
+    )
     return state.selectedItem.quantity * state.dummyProduct.price
   },
   getSelectedQuantity(state) {
