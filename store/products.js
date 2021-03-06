@@ -185,12 +185,6 @@ export const actions = {
         this.$apis.getProductByQuery(query, bulkLoadPagination).then((data) => {
           const cachedProducts = Object.assign({ ...data })
           context.commit('__SET_CACHE_ITEMS', cachedProducts)
-          console.log(
-            FUNC_NAME,
-            'finally수행됩니다:',
-            query,
-            bulkLoadPagination
-          )
           context.commit('__SET_CACHE_ITEMS_META_INFO', {
             query,
             bulkLoadPagination,
@@ -224,7 +218,7 @@ export const actions = {
    */
   setPage({ state, commit, dispatch }, page) {
     console.log(
-      'store/product.js actions/setPage\n: 마우스 클릭에 의해 페이지 설정됨',
+      'store/product.js | actions/setPage : 마우스 클릭에 의해 페이지 설정됨',
       arguments[1]
     )
     const newPageCondition = { ...state.currentFilter }
@@ -233,32 +227,10 @@ export const actions = {
   },
 }
 
-/**
- * 저장된 상품 캐시데이터를 페이지단위로 돌려준다
- * @Param pagination            { Object } 페이지 정보
- * @Param pagination.pages       { Number=1 } 페이지 번호
- * @Param pagination.size        { Number=10 } 페이지당 로딩 사이즈
- * @Param pagination.order       { String="product_id" } 정렬 방법
- * @Param pagination.by          { ('ASC'|'DES')='ASC' } 정렬 방향
- * @returns {{total: (number|{jsMemoryEstimate: number, jsMemoryRange: [number, number]}|number|*), contents, last_page: (*|number), current_page}}
- */
-// returnPageData(pagination) {
-//   return {
-//     contents: cachedProducts.contents.filter(
-//       (item, index) =>
-//         index >= (pagination.page - 1) * pagination.size &&
-//         index < pagination.page * pagination.size
-//     ),
-//     last_page: cachedProducts.last_page,
-//     current_page: pagination.page,
-//     total: cachedProducts.total,
-//   },
-// },
-
 export const getters = {
   getProducts(state) {
     console.log(
-      'store/product.js actions/getProducts:\n',
+      'store/product.js | actions/getProducts :',
       state.current_page.page,
       state.current_page.items
     )

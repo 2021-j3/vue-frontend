@@ -37,8 +37,6 @@ export default {
     console.log(
       'default.vue created:\n ' + 'cart/fetchCart currently DOES NOT CALLED'
     )
-    this.$store.commit('cart/SET_CART', null)
-    this.$store.commit('TOGGLE_SELECTED_CART_ITEMS', [])
   },
 }
 </script>

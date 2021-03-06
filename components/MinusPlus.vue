@@ -1,5 +1,5 @@
 <template>
-  <v-card color="yellow" elevation="0">
+  <v-card color="yellow" elevation="0" min-width="80">
     <v-text-field
       v-model="_number"
       class="centered-input ma-0"
@@ -9,8 +9,12 @@
       type="number"
       @click.stop
     >
-      <v-icon slot="append-outer" @click.stop="increase"> mdi-plus </v-icon>
-      <v-icon slot="prepend" @click.stop="decrease"> mdi-minus </v-icon>
+      <v-icon slot="append-outer" class="ml-n2" @click.stop="increase">
+        mdi-plus
+      </v-icon>
+      <v-icon slot="prepend" class="mr-n2" @click.stop="decrease">
+        mdi-minus
+      </v-icon>
     </v-text-field>
   </v-card>
 </template>

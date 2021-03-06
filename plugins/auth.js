@@ -19,6 +19,8 @@ export default function ({ app }) {
   if (!app.$auth.loggedIn) {
     return
   }
-  app.$api.setHeader()
-  console.log('custom login is here')
+  // app.$api.setHeader()
+  console.warn(
+    'store/auth.js | : TODO: 로그인 후 커스텀 동작을 정의할 수 있습니다 '
+  )
 }

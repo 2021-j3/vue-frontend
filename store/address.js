@@ -20,7 +20,6 @@ export const mutations = {
     state.addresses = item
   },
   ADD_ADDRESS(state, item) {
-    console.log('push data')
     state.addresses.push(item)
   },
   UPDATE_ADDRESS(state, item) {
