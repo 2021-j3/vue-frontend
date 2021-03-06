@@ -1,6 +1,6 @@
 # j3-frontend
 
-![screenshot](img/screenshot.gif)
+![screenshot](img/screenshot.v2.gif)
 
 ## Build Setup
 
