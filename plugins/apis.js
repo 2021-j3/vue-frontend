@@ -17,7 +17,7 @@ export default function ({ $axios, redirect, store }, inject) {
       if (store.$auth.loggedIn) {
         // auth token 추가
         request.headers.common.Authorization =
-          store.getters['myAuth/getAuthorization']
+          store.getters['token/getAuthorization']
       }
       console.log(FUNC_NAME, '리퀘스트 내용=', request)
       return request
@@ -66,7 +66,7 @@ export default function ({ $axios, redirect, store }, inject) {
         .get('/address/my')
         .then((data) => {
           console.log(
-            'plugins/apis getMyAddresses:\n 서버에서 받은 카트:',
+            'plugins/apis | getMyAddresses : 서버에서 받은 카트:',
             data
           )
           resolve(data)
@@ -91,7 +91,7 @@ export default function ({ $axios, redirect, store }, inject) {
     return new Promise((resolve, reject) => {
       api.get('/address/' + id, address).then((data) => {
         console.log(
-          'plugins/apis updateMyAddresses:\n 서버에서 받은 카트:',
+          'plugins/apis | updateMyAddresses : 서버에서 받은 카트:',
           data
         )
         resolve(data)
@@ -115,7 +115,7 @@ export default function ({ $axios, redirect, store }, inject) {
    * @returns { Promise } 서버에서 가져온 카트
    */
   const getMyCart = function () {
-    console.log(
+    console.warn(
       'plugins/apis.js | getMyCart : "FIXME:cart는 현재 bodydata타입입니다"'
     )
     return new Promise((resolve, reject) => {
@@ -126,6 +126,33 @@ export default function ({ $axios, redirect, store }, inject) {
         .catch((error) => reject(error))
     })
   }
+
+  const addItemToCart = function (id, item) {
+    return new Promise((resolve, reject) => {
+      api
+        .post(`/carts/${id}/cartItem`, item)
+        .then((response) => response.data) // body data 사용 시
+        .then((data) => {
+          console.warn(
+            'plugins/apis.js | addItemToCart : "FIXME: cart는 현재 bodydata타입입니다"'
+          )
+          console.log(
+            'plugins/apis.js | addItemToCart : 서버에서 돌려준 정보는=',
+            data
+          )
+          resolve(data)
+        })
+      resolve()
+    })
+  }
+
+  const deleteItemFromCart = function (id, item) {
+    return new Promise((resolve, reject) => {
+      api.delete(`/carts/${id}/cartItem`, item)
+      resolve()
+    })
+  }
+
   const getAllCategories = function () {
     return new Promise((resolve, reject) => {
       api
@@ -144,7 +171,10 @@ export default function ({ $axios, redirect, store }, inject) {
       api
         .get('/products/' + id)
         .then((data) => {
-          console.log('plugins/apis getProductById:\n 서버에서 받은 상품', data)
+          console.log(
+            'plugins/apis | getProductById : 서버에서 받은 상품',
+            data
+          )
           resolve(data)
         })
         .catch((error) => reject(error))
@@ -166,6 +196,7 @@ export default function ({ $axios, redirect, store }, inject) {
    */
   const getProductByQuery = function (query, pagination) {
     console.log(
+      'plugins/apis | getProductByQuery : ',
       '캐시에 해당 데이터가 없습니다. 새로 받아옵니다, api 파라미터',
       arguments
     )
@@ -208,6 +239,8 @@ export default function ({ $axios, redirect, store }, inject) {
     updateMyAddresses,
     deleteAddress,
     getMyCart,
+    addItemToCart,
+    deleteItemFromCart,
     getAllCategories,
     getProductById,
     getProductByQuery,

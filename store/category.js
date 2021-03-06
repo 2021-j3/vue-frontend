@@ -57,7 +57,9 @@ export const actions = {
 
 export const getters = {
   getCategory(state) {
-    console.log('called2')
+    console.warn(
+      'store/category | getters/getCategory : TODO: 카테고리스를 사용하도록 수정해야 합니다'
+    )
     return state.categories
   },
 }

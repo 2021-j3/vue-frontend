@@ -35,30 +35,34 @@
                       :true-value="cartItem.id"
                     />
                   </v-list-item-action>
-                  <v-list-item-icon>
-                    <v-img
-                      :alt="`${cartItem.title}`"
-                      :src="cartItem.thumbnailPath"
-                    ></v-img>
-                  </v-list-item-icon>
-                  <v-list-item-content class="ml-5">
-                    <v-list-item-title v-text="cartItem.title">{{
-                      cartItem.title
-                    }}</v-list-item-title>
+                  <v-list-item-avatar tile size="64">
+                    <v-img :src="cartItem.thumbnail_path"></v-img>
+                  </v-list-item-avatar>
+                  <v-list-item-content class="px-5">
+                    <v-layout row align-center>
+                      <v-flex col grow="true">
+                        <v-list-item-title v-text="cartItem.title">{{
+                          cartItem.title
+                        }}</v-list-item-title>
+                      </v-flex>
+                      <v-spacer />
+                      <v-flex col xs4>
+                        <v-layout row align-center justify-end>
+                          <v-flex col shrink>
+                            <minus-plus
+                              :ref-object="cartItem"
+                              :number="cartItem.quantity"
+                              @update="onChanged"
+                            ></minus-plus>
+                          </v-flex>
+                          <v-flex col text-right
+                            >{{ cartItem.price }} 원</v-flex
+                          >
+                        </v-layout>
+                      </v-flex>
+                    </v-layout>
                   </v-list-item-content>
-                  <v-spacer />
-                  <v-list-item-action>
-                    <v-row>
-                      <v-col cols="5" offset="4">
-                        <minus-plus
-                          :ref-object="cartItem"
-                          :number="cartItem.quantity"
-                          @update="onChanged"
-                        ></minus-plus>
-                      </v-col>
-                      <v-col cols="3">{{ cartItem.price }} 원</v-col>
-                    </v-row>
-                  </v-list-item-action>
+                  <!--                  <v-spacer />-->
                 </template>
               </v-list-item>
             </v-list-item-group>
@@ -66,7 +70,7 @@
           yellow
         </v-card>
       </v-col>
-      <v-col cols="3">
+      <v-col cols="2">
         <v-card>
           <v-card color="yellow pa-5">
             <v-card-title>배송지</v-card-title>

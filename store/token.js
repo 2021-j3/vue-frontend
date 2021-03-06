@@ -26,6 +26,7 @@ export const actions = {
       .then((data) => {
         console.log('store/token.js | actions/login:', data)
         this.$router.push('/')
+        context.dispatch('cart/fetchCart', null, { root: true })
         context.commit('SET_LOGIN_INFO', data)
       })
   },
@@ -41,7 +42,7 @@ export const actions = {
 }
 
 export const getters = {
-  getAuthorization(state, getters, rootState, rootGetters) {
+  getAuthorization(state) {
     return 'Bearer ' + state.login_info.token
   },
   getEmail(state) {

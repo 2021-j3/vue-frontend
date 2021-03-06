@@ -24,11 +24,11 @@ export const actions = {
     this.$api
       .post('/accounts', form)
       .then((data) => {
-        console.log('store/accounts.js actions/createAccount:\n', data)
+        console.log('store/accounts.js | actions/createAccount : ', data)
         this.$router.push('/auth/login')
       })
       .catch((error) => {
-        console.error('store/accounts.js actions/createAccount:\n', error)
+        console.error('store/accounts.js | actions/createAccount :', error)
       })
   },
   fetchAccount(context) {

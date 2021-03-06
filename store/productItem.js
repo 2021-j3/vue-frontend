@@ -49,7 +49,7 @@ export const state = () => ({
 
 export const mutations = {
   SET_PRODUCT_ITEM(state, product) {
-    console.log('store/productItem.js - mutations/SET_PRODUCT_ITEM:\n', product)
+    console.log('store/productItem.js | mutations/SET_PRODUCT_ITEM :', product)
     state.selectedItem.product = product
     state.selectedItem.quantity = 1
   },
@@ -65,15 +65,18 @@ export const actions = {
    * @param id
    */
   fetchProduct(context, id) {
-    console.log('store/productItem.js - actions/fetchProductItem:\nid is', id)
+    console.log('store/productItem.js | actions/fetchProductItem :id is', id)
     this.$apis
       .getProductById(id)
       .then((data) => {
-        console.log('store/productItem.js - actions/fetchProductItem:\n', data)
+        console.log(
+          'store/productItem.js | actions/fetchProductItem : 데이터는',
+          data
+        )
         context.commit('SET_PRODUCT_ITEM', data)
       })
       .catch((error) => {
-        console.error('store/product.js - actions/fetchProductItem:\n', error)
+        console.error('store/product.js | actions/fetchProductItem :', error)
       })
   },
   /**
@@ -103,7 +106,6 @@ export const getters = {
       state.selectedItem.product !== null
     )
       return state.selectedItem.product
-    console.log('good')
     return state.dummyProduct
   },
   getDiscountedPrice(state) {
@@ -126,7 +128,6 @@ export const getters = {
       state.selectedItem.product !== null
     )
       return state.selectedItem.quantity * state.selectedItem.product.price
-    console.log('good')
     return state.selectedItem.quantity * state.dummyProduct.price
   },
   getSelectedQuantity(state) {
