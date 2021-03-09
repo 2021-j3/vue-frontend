@@ -13,12 +13,6 @@ export default function ({ $axios, redirect, store }, inject) {
   api.interceptors.request.use(
     (request) => {
       const FUNC_NAME = 'plugins/apis | api/request-onFullFilled : '
-      // 로그인  여부 확인
-      if (store.$auth.loggedIn) {
-        // auth token 추가
-        request.headers.common.Authorization =
-          store.getters['token/getAuthorization']
-      }
       console.log(FUNC_NAME, '리퀘스트 내용=', request)
       return request
     },
@@ -44,26 +38,64 @@ export default function ({ $axios, redirect, store }, inject) {
       return Promise.reject(error)
     }
   )
+  /// //////////////////////////////////////////////////////////////////////
   /**
-   * 주소를 생성한다
-   * @param item
-   * @returns {*}
+   * 로그인 한다
+   * @param form { Object } 로그인 폼
+   * @Param form.email ( String } 회원 이메일
+   * @Param form.password { String } 회원 비밀번호
    */
-  const createAddress = function (item) {
+  const login = function (form) {
     return new Promise((resolve, reject) => {
-      api.post('/address', item).then((data) => resolve(data))
+      api
+        .post('/accounts/login', form)
+        .then((response) => {
+          // setCookie('username', response.data.firstName)
+          resolve(response)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+  const logout = function () {
+    return new Promise((resolve) => {
+      api.post('/accounts/logout').then(() => {
+        console.log('로그아웃')
+        resolve()
+      })
+    })
+  }
+
+  const getMyAccount = function () {
+    return new Promise((resolve, reject) => {
+      api
+        .get('/accounts/my', { withCredentials: true })
+        .then((data) => resolve(data))
     })
   }
 
   /**
-   * 주소를 가져온다
-   * @param id { Number } 주소 아이디
+   * 주소를 생성한다
+   * @param item
+   * @returns { Promise }
+   */
+  const createAddress = function (item) {
+    return new Promise((resolve, reject) => {
+      api
+        .post('/address', { data: item, withCredentials: true })
+        .then((data) => resolve(data))
+    })
+  }
+
+  /**
+   * 로그인된 고객의 주소를 가져온다
    * @returns { Promise }
    */
   const getMyAddresses = function () {
     return new Promise((resolve, reject) => {
       api
-        .get('/address/my')
+        .get('/address/my', { withCredentials: true })
         .then((data) => {
           console.log(
             'plugins/apis | getMyAddresses : 서버에서 받은 카트:',
@@ -89,13 +121,15 @@ export default function ({ $axios, redirect, store }, inject) {
    */
   const updateMyAddresses = function (id, address) {
     return new Promise((resolve, reject) => {
-      api.get('/address/' + id, address).then((data) => {
-        console.log(
-          'plugins/apis | updateMyAddresses : 서버에서 받은 카트:',
-          data
-        )
-        resolve(data)
-      })
+      api
+        .get('/address/' + id, { data: address, withCredentials: true })
+        .then((data) => {
+          console.log(
+            'plugins/apis | updateMyAddresses : 서버에서 받은 카트:',
+            data
+          )
+          resolve(data)
+        })
     })
   }
   /**
@@ -105,7 +139,7 @@ export default function ({ $axios, redirect, store }, inject) {
    */
   const deleteAddress = function (id) {
     return new Promise((resolve) => {
-      api.delete('/address/' + id).then(() => {
+      api.delete('/address/' + id, { withCredentials: true }).then(() => {
         resolve()
       })
     })
@@ -120,17 +154,24 @@ export default function ({ $axios, redirect, store }, inject) {
     )
     return new Promise((resolve, reject) => {
       api
-        .get('/cart/my')
+        .get('/cart/my', { withCredentials: true })
         .then((data) => resolve(data.data))
         .then((data) => resolve(data))
         .catch((error) => reject(error))
     })
   }
-
+  /**
+   *
+   * @param id { Number }
+   * @param item { Object }
+   * @Param item.product_id { Number }
+   * @Param item.quantity { Number }
+   * @returns {*}
+   */
   const addItemToCart = function (id, item) {
     return new Promise((resolve, reject) => {
       api
-        .post(`/carts/${id}/cartItem`, item)
+        .post(`/carts/${id}/cartItem`, item, { withCredentials: true })
         .then((response) => response.data) // body data 사용 시
         .then((data) => {
           console.warn(
@@ -147,6 +188,10 @@ export default function ({ $axios, redirect, store }, inject) {
   }
 
   const deleteItemFromCart = function (id, item) {
+    console.warn(
+      'plugins/apis.js | deleteItemFromCart :',
+      `"FIXME: delete 요청시 리퀘스트바디 사용불가"`
+    )
     return new Promise((resolve, reject) => {
       api.delete(`/carts/${id}/cartItem`, item)
       resolve()
@@ -203,37 +248,15 @@ export default function ({ $axios, redirect, store }, inject) {
     return new Promise((resolve, reject) => {
       const queryParam = getRequestParam({ ...query, ...pagination })
       api.get('/products?' + queryParam).then((data) => {
-        cachedProducts = Object.assign({ ...data })
-        resolve(cachedProducts)
+        resolve(data)
       })
     })
   }
-  /**
-   * 저장된 상품 캐시데이터를 페이지단위로 돌려준다
-   * @Param pagination            { Object } 페이지 정보
-   * @Param pagination.pages       { Number=1 } 페이지 번호
-   * @Param pagination.size        { Number=10 } 페이지당 로딩 사이즈
-   * @Param pagination.order       { String="product_id" } 정렬 방법
-   * @Param pagination.by          { ('ASC'|'DES')='ASC' } 정렬 방향
-   * @returns {{total: (number|{jsMemoryEstimate: number, jsMemoryRange: [number, number]}|number|*), contents, last_page: (*|number), current_page}}
-   */
-  // function returnPageData(pagination) {
-  //   return {
-  //     contents: cachedProducts.contents.filter(
-  //       (item, index) =>
-  //         index >= (pagination.page - 1) * pagination.size &&
-  //         index < pagination.page * pagination.size
-  //     ),
-  //     last_page: cachedProducts.last_page,
-  //     current_page: pagination.page,
-  //     total: cachedProducts.total,
-  //   }
-  // }
-  // let lastQuery = null
-  // let lastPagination = null
-  let cachedProducts = {}
 
   const apis = {
+    login,
+    logout,
+    getMyAccount,
     createAddress,
     getMyAddresses,
     updateMyAddresses,

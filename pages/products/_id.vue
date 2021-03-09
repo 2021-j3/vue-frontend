@@ -3,7 +3,9 @@
   <div class="product_item">
     <v-row>
       <v-col cols="10" offset="1">
-        <v-breadcrumbs :items="categoryTree" divider="-"></v-breadcrumbs>
+        <v-col v-for="(categoryTree, index) in categoryTrees" :key="index">
+          <v-breadcrumbs :items="categoryTree" divider="-"></v-breadcrumbs>
+        </v-col>
       </v-col>
     </v-row>
     <v-row>
@@ -96,8 +98,8 @@ export default {
         return this.$store.getters['productItem/getSelectedQuantity']
       },
     },
-    categoryTree() {
-      return this.$store.getters['productItem/getCategoryTree']
+    categoryTrees() {
+      return this.$store.getters['productItem/getCategoryTrees']
     },
   },
   created() {

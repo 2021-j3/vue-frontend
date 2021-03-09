@@ -24,6 +24,7 @@
 <script>
 export default {
   name: 'MemberInfo',
+  middleware: ['auth'],
   data: () => ({
     selectedInfo: 0,
     infos: [

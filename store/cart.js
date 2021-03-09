@@ -97,9 +97,10 @@ export const actions = {
   fetchCart(context) {
     console.log(
       'store/cart.js | actions/fetchCart : 로그인 상태=',
-      this.$auth.loggedIn
+
+      context.rootGetters['auth/loggedIn']
     )
-    if (this.$auth.loggedIn) {
+    if (context.rootGetters['auth/loggedIn']) {
       context.dispatch('__fetchCartFromServer')
     } else {
       context.dispatch('__fetchLocalCart')
@@ -136,7 +137,7 @@ export const actions = {
     context.commit('__CALCULATE_PRICES')
   },
   deleteSelectedCartItems(context) {
-    if (!this.$auth.loggedIn) {
+    if (!context.rootGetters['auth/loggedIn']) {
       context
         .dispatch(
           'localCart/deleteSelectedCartItems',
@@ -166,7 +167,7 @@ export const actions = {
    * @Param item.discount_price { Number }
    * @Param item.quantity { Number }
    * * */
-  addItemToCart({ dispatch, commit, state }, item) {
+  addItemToCart({ dispatch, commit, state, rootGetters }, item) {
     // 간소화된 상품->카트아이템 로직
     console.warn(
       'store/cart | actions/addItemToCart : FIXME: 간소화된 카트아이템 객체를 사용하고 있습니다.'
@@ -174,7 +175,7 @@ export const actions = {
     const cartItem = Object.assign({ ...item.product })
     cartItem.quantity = item.quantity
     console.log('store/cart | actions/addItemToCart : 새로운 아이템=', cartItem)
-    if (!this.$auth.loggedIn) {
+    if (!rootGetters['auth/loggedIn']) {
       console.log(
         'store/cart.js | actions/addItemToCart : ',
         '로그인 안됨, 로컬 카트에 추가=',
@@ -184,7 +185,7 @@ export const actions = {
         root: true,
       })
     } else if (state.cart.cart_id !== -1) {
-      this.$apis.addItemToCart(state.cart.cart_id, item)
+      this.$apis.addItemToCart(state.cart.cart_id, cartItem)
     } else {
       console.error(
         'store/cart.js | actions/addItemToCart : 로그인 되었으나, cart가 없습니다',
