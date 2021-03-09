@@ -14,13 +14,17 @@
 <script>
 export default {
   name: 'AuthLogin',
+  // middleware: ['auth'],
   methods: {
     onsubmit(value) {
       // const array = new Uint32Array(10)
       // this.$store.commit('myAuth/SET_TOKEN_NAME', this.window.crypto)
       console.log('click login')
       // this.$store.dispatch('myAuth/login', value)
-      this.$store.dispatch('token/login', value)
+      this.$store.dispatch('auth/login', value).then(() => {
+        this.$store.dispatch('cart/fetchCart')
+        this.$router.push('/')
+      })
     },
   },
 }

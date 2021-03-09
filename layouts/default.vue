@@ -4,7 +4,11 @@
     <v-main>
       <HeaderCommercial />
       <!--        서치 바-->
-      <Header :key="loggedIn" :number-of-cart-items="numberOfCartItems" />
+      <Header
+        :key="loggedIn"
+        :logged-in="loggedIn"
+        :number-of-cart-items="numberOfCartItems"
+      />
       <!--        서치 바 끝-->
       <nuxt class="mt-10" />
     </v-main>
@@ -25,7 +29,8 @@ export default {
   },
   computed: {
     loggedIn() {
-      return this.$auth.loggedIn
+      console.log('헤더 키 업데이트 됨=', this.$store.getters['auth/loggedIn'])
+      return this.$store.getters['auth/loggedIn']
     },
     numberOfCartItems() {
       return this.$store.getters['cart/numberOfCartItems']

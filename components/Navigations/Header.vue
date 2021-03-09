@@ -28,14 +28,22 @@
         <v-col cols="4">
           <!--회원정보 버튼-->
           <v-layout justify-end>
-            <v-btn v-if="loggedIn" text @click.prevent="logout">로그아웃</v-btn>
-            <v-btn v-if="loggedIn" text :to="{ path: '/myj3/memberInfo' }"
+            <v-btn v-if="loggedIn === true" text @click.prevent="logout"
+              >로그아웃</v-btn
+            >
+            <v-btn
+              v-if="loggedIn === true"
+              text
+              :to="{ path: '/myj3/memberInfo' }"
               >회원정보</v-btn
             >
-            <v-btn v-if="!loggedIn" text :to="{ path: '/auth/login' }"
+            <v-btn v-if="loggedIn === false" text :to="{ path: '/auth/login' }"
               >로그인</v-btn
             >
-            <v-btn v-if="!loggedIn" text :to="{ path: '/auth/register' }"
+            <v-btn
+              v-if="loggedIn === false"
+              text
+              :to="{ path: '/auth/register' }"
               >회원가입</v-btn
             >
             <!--카트에 아이템이 있는 경우-->
@@ -138,6 +146,7 @@
 export default {
   name: 'Header',
   props: {
+    loggedIn: { type: Boolean, default: false },
     numberOfCartItems: { type: Number, default: 0 },
   },
   data() {
@@ -145,7 +154,6 @@ export default {
       drawer: false,
       selectedCategory: null,
       categoriesMenu: false,
-      loggedIn: false,
       queryString: '',
     }
   },
@@ -156,7 +164,6 @@ export default {
   },
   created() {
     this.$store.dispatch('categories/loadCategories')
-    this.loggedIn = this.$auth.loggedIn
   },
   methods: {
     searchByQueryString() {
@@ -168,7 +175,7 @@ export default {
     },
     logout() {
       // this.$store.dispatch('myAuth/logout')
-      this.$store.dispatch('token/logout')
+      this.$store.dispatch('auth/logout')
     },
   },
 }

@@ -1,5 +1,4 @@
 import colors from 'vuetify/es5/util/colors'
-
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
@@ -45,11 +44,11 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
-    '@nuxtjs/auth',
+    'cookie-universal-nuxt',
     [
       'nuxt-vuex-localstorage',
       {
-        sessionStorage: ['token', 'localCart'],
+        sessionStorage: ['auth', 'localCart'],
       },
     ],
   ],
@@ -66,41 +65,6 @@ export default {
       target: 'http://localhost:20000', //  개발 시 프록시 지정
       logLevel: 'debug',
     },
-  },
-
-  auth: {
-    redirect: {
-      login: '/auth/login',
-    },
-
-    strategies: {
-      local: {
-        // auth 관련 api 관리
-        endpoints: {
-          // data { email, role, token } 이므로 토큰의 경로는 data.token
-          login: {
-            url: '/api/accounts/login',
-            method: 'post',
-            propertyName: 'token',
-          },
-          user: false,
-          // user: { url: '/api/accounts/my', method: 'get' },
-          logout: false,
-        },
-        tokenRequired: true,
-        tokenType: 'Bearer',
-      },
-      // user: {
-      //   property: false,
-      //   authFetch: true,
-      // }
-    },
-    cookie: {
-      prefix: 'AUTHENTIFICATION',
-    },
-    watchLoggedIn: true,
-    resetOnError: true,
-    plugins: ['~/plugins/auth.js'],
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -123,7 +87,7 @@ export default {
   },
   //
   router: {
-    middleware: ['auth', 'redirection'],
+    middleware: ['redirection'],
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

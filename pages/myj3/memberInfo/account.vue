@@ -1,10 +1,10 @@
 <template>
   <div class="myAccount">
-    <account-update-form
-      :email.sync="account.email"
+    <AccountUpdateForm
+      :cur-data="accountFromDB"
       :onsubmit="onsubmit"
       class="pa-5"
-    ></account-update-form>
+    ></AccountUpdateForm>
   </div>
 </template>
 
@@ -15,9 +15,8 @@ export default {
     return {}
   },
   computed: {
-    account() {
-      console.log('form', this.$store.getters['account/account'])
-      return this.$store.getters['account/account']
+    accountFromDB() {
+      return this.$store.getters['account/getAccount']
     },
   },
   created() {

@@ -41,6 +41,7 @@ export const state = () => ({
     product: {},
     quantity: 1,
   },
+  categories: [],
   dummyCategoryTree: [
     { category_id: 1, title: '카테고리' },
     { category_id: 2, title: '서브카테고리' },
@@ -52,6 +53,23 @@ export const mutations = {
     console.log('store/productItem.js | mutations/SET_PRODUCT_ITEM :', product)
     state.selectedItem.product = product
     state.selectedItem.quantity = 1
+  },
+  SET_CATEGORY_TREE(state, categories) {
+    const FUNC_NAME = 'store/productItem.js | mutations/SET_CATEGORY_TREE :'
+    console.log(FUNC_NAME, '아이템의 전체 카테고리=', categories)
+    categories.forEach((cat) => {
+      const categoryTree = []
+      let selectedCategory = cat
+      while (selectedCategory !== null) {
+        console.log(FUNC_NAME, '선택된 카테고리=', categories)
+        categoryTree.unshift({
+          text: selectedCategory.title,
+          href: selectedCategory.slug,
+        })
+        selectedCategory = selectedCategory.parent
+      }
+      state.categories.push(categoryTree)
+    })
   },
   SET_SELECTED_QUANTITY(state, quantity) {
     state.selectedItem.quantity = quantity
@@ -74,6 +92,7 @@ export const actions = {
           data
         )
         context.commit('SET_PRODUCT_ITEM', data)
+        context.commit('SET_CATEGORY_TREE', data.categories)
       })
       .catch((error) => {
         console.error('store/product.js | actions/fetchProductItem :', error)
@@ -136,9 +155,12 @@ export const getters = {
   getSelectedQuantity(state) {
     return state.selectedItem.quantity
   },
-  getCategoryTree(state) {
-    return state.dummyCategoryTree.map((v) => {
-      return { text: v.title, href: 'categories/' + v.category_id }
-    })
+  getCategoryTrees(state) {
+    console.log('카테고리 내역:', state.categories)
+
+    return state.categories
+    // return state.dummyCategoryTree.map((v) => {
+    //   return { text: v.title, href: 'categories/' + v.category_id }
+    // })
   },
 }
